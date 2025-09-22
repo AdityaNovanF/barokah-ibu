@@ -189,4 +189,15 @@ function display_contact_message() {
 
 // Remove the head scripts function since we load Tailwind directly in header
 // add_action('wp_head', 'barokah_printing_head_scripts', 1);
+
+// Opsi: Sembunyikan admin bar untuk non-admin (optional)
+// Uncomment baris berikut jika ingin menyembunyikan admin bar untuk semua user kecuali admin
+/*
+function hide_admin_bar_for_non_admin() {
+    if (!current_user_can('administrator') && !is_admin()) {
+        show_admin_bar(false);
+    }
+}
+add_action('after_setup_theme', 'hide_admin_bar_for_non_admin');
+*/
 ?>

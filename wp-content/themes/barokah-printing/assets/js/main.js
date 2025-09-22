@@ -119,17 +119,17 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', animateOnScroll);
     animateOnScroll(); // Run on load
     
-    // Navbar background change on scroll
-    const navbar = document.querySelector('nav');
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-            navbar.classList.add('bg-white', 'shadow-lg');
-            navbar.classList.remove('bg-transparent');
-        } else {
-            navbar.classList.remove('bg-white', 'shadow-lg');
-            navbar.classList.add('bg-transparent');
-        }
-    });
+    // Navbar background change on scroll - DISABLED to keep navbar stable
+    // const navbar = document.querySelector('nav');
+    // window.addEventListener('scroll', function() {
+    //     if (window.scrollY > 50) {
+    //         navbar.classList.add('bg-white', 'shadow-lg');
+    //         navbar.classList.remove('bg-transparent');
+    //     } else {
+    //         navbar.classList.remove('bg-white', 'shadow-lg');
+    //         navbar.classList.add('bg-transparent');
+    //     }
+    // });
     
     // Number counter animation
     function animateCounters() {
