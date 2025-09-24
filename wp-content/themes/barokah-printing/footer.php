@@ -4,23 +4,23 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <!-- Company Info -->
                 <div class="col-span-1 md:col-span-2">
-                    <h3 class="text-xl font-bold mb-4"><?php bloginfo('name'); ?></h3>
+                    <h3 class="text-xl font-bold mb-4">Barokah Ibu Digital Printing</h3>
                     <p class="text-gray-300 mb-4">
                         Solusi terpercaya untuk semua kebutuhan percetakan Anda. Dengan teknologi modern dan tim berpengalaman, kami siap memberikan hasil terbaik.
                     </p>
                     <div class="flex space-x-4">
-                        <a href="#" class="text-gray-300 hover:text-white transition duration-300">
+                        <!-- <a href="#" class="text-gray-300 hover:text-white transition duration-300">
                             <i class="fab fa-facebook-f text-xl"></i>
-                        </a>
-                        <a href="#" class="text-gray-300 hover:text-white transition duration-300">
+                        </a> -->
+                        <a href="https://www.instagram.com/barokahibu.percetakan" class="text-gray-300 hover:text-white transition duration-300">
                             <i class="fab fa-instagram text-xl"></i>
                         </a>
-                        <a href="#" class="text-gray-300 hover:text-white transition duration-300">
+                        <a href="https://wa.me/6282144888116" target="_blank" class="text-gray-300 hover:text-white transition duration-300">
                             <i class="fab fa-whatsapp text-xl"></i>
                         </a>
-                        <a href="#" class="text-gray-300 hover:text-white transition duration-300">
+                        <!-- <a href="#" class="text-gray-300 hover:text-white transition duration-300">
                             <i class="fab fa-twitter text-xl"></i>
-                        </a>
+                        </a> -->
                     </div>
                 </div>
                 
@@ -42,19 +42,23 @@
                     <div class="space-y-2 text-gray-300">
                         <div class="flex items-center">
                             <i class="fas fa-map-marker-alt mr-2"></i>
-                            <span>Jl. Printing No. 123, Jakarta</span>
+                            <span>Jln. Raya Mangaran, Situbondo</span>
                         </div>
                         <div class="flex items-center">
                             <i class="fas fa-phone mr-2"></i>
-                            <span>+62 812-3456-7890</span>
+                            <span>+62 821-4488-8116</span>
                         </div>
                         <div class="flex items-center">
                             <i class="fas fa-envelope mr-2"></i>
-                            <span>info@barokahprinting.com</span>
+                            <span>barokahibu.percetakan@gmail.com</span>
                         </div>
-                        <div class="flex items-center">
-                            <i class="fas fa-clock mr-2"></i>
-                            <span>Sen - Sab: 08:00 - 17:00</span>
+                        <div class="flex items-start">
+                            <i class="fas fa-clock mr-2 mt-1"></i>
+                            <div>
+                                <div>Senin - Sabtu: 08:00 - 21:00</div>
+                                <div>Jumat: 08:00 - 11:00 & 13:00 - 21:00</div>
+                                <div class="text-sm text-gray-400 mt-1">Minggu: Tutup</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -64,7 +68,7 @@
             
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <p class="text-gray-400 text-sm">
-                    &copy; <?php echo date('Y'); ?> <?php bloginfo('name'); ?>. Semua hak cipta dilindungi.
+                    &copy; <?php echo date('Y'); ?> Barokah Ibu Digital Printing. Semua hak cipta dilindungi.
                 </p>
                 <div class="mt-4 md:mt-0">
                     <a href="#" class="text-gray-400 hover:text-white text-sm mr-4 transition duration-300">Privacy Policy</a>
@@ -74,6 +78,9 @@
         </div>
     </footer>
 
+    <!-- Main JavaScript -->
+    <script src="<?php echo get_template_directory_uri(); ?>/assets/js/main.js"></script>
+    
     <?php wp_footer(); ?>
 </body>
 </html>

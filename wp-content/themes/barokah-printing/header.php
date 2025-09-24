@@ -28,6 +28,46 @@
         .animate-fade-in { animation: fadeIn 0.5s ease-in-out; }
         .animate-fade-in-up { animation: fadeInUp 0.8s ease-out; }
         
+        /* Services Carousel Styles */
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            width: 600%; /* 6 slides × 100% */
+        }
+        
+        .carousel-slide {
+            flex: 0 0 100%;
+            width: 100%;
+        }
+        
+        /* Service Cards Flexbox Alignment */
+        .service-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .service-card-content {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            padding: 1.5rem;
+        }
+        
+        .service-card-description {
+            flex-grow: 1;
+            margin-bottom: 1rem;
+        }
+        
+        .service-card-footer {
+            margin-top: auto;
+        }
+        
         /* Ensure header stays at top */
         header {
             position: fixed !important;
@@ -74,9 +114,12 @@
                             <?php the_custom_logo(); ?>
                         </div>
                     <?php else : ?>
-                        <a href="<?php echo home_url(); ?>" class="flex items-center text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors duration-200">
-                            <?php bloginfo('name'); ?>
-                        </a>
+                        <div class="flex flex-col">
+                            <a href="<?php echo home_url(); ?>" class="text-3xl font-bold text-blue-600 hover:text-blue-700 transition-colors duration-200 leading-tight">
+                                BAROKAH IBU
+                            </a>
+                            <span class="text-gray-700 italic text-sm tracking-widest">D i g i t a l  p r i n t i n g</span>
+                        </div>
                     <?php endif; ?>
                 </div>
 
@@ -86,7 +129,9 @@
                     <a href="#layanan" class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">Layanan</a>
                     <a href="#portfolio" class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">Portfolio</a>
                     <a href="#tentang" class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">Tentang</a>
-                    <a href="#kontak" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg">Kontak</a>
+                    <a href="#testimoni" class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">Testimoni</a>
+                    <a href="#kontak" class="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200">Kontak</a>
+                    <a href="#layanan" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg">Cetak Sekarang</a>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -108,7 +153,9 @@
                     <a href="#layanan" class="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md font-medium transition-colors duration-200">Layanan</a>
                     <a href="#portfolio" class="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md font-medium transition-colors duration-200">Portfolio</a>
                     <a href="#tentang" class="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md font-medium transition-colors duration-200">Tentang</a>
-                    <a href="#kontak" class="block mx-3 my-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium text-center transition-colors duration-200">Kontak</a>
+                    <a href="#testimoni" class="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md font-medium transition-colors duration-200">Testimoni</a>
+                    <a href="#kontak" class="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md font-medium transition-colors duration-200">Kontak</a>
+                    <a href="#layanan" class="block mx-3 my-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium text-center transition-colors duration-200">Mulai Cetak</a>
                 </div>
             </div>
         </nav>

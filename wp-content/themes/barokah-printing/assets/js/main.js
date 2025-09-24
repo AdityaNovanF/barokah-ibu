@@ -185,24 +185,205 @@ document.addEventListener('DOMContentLoaded', function() {
     
     images.forEach(img => imageObserver.observe(img));
     
-    // Testimonial slider (if you want to add more testimonials)
-    function initTestimonialSlider() {
+    // Testimonial carousel
+    function initTestimonialCarousel() {
+        const testimonialContainer = document.querySelector('.testimonial-container');
         const testimonials = document.querySelectorAll('.testimonial-item');
-        let currentTestimonial = 0;
         
-        if (testimonials.length > 3) {
+        if (testimonials.length > 0) {
+            let currentIndex = 0;
+            
+            // Create dots indicator
+            const dotsContainer = document.createElement('div');
+            dotsContainer.className = 'flex justify-center mt-8 space-x-2';
+            
+            testimonials.forEach((_, index) => {
+                const dot = document.createElement('button');
+                dot.className = `w-3 h-3 rounded-full transition-colors duration-300 ${index === 0 ? 'bg-blue-600' : 'bg-gray-300'}`;
+                dot.addEventListener('click', () => goToSlide(index));
+                dotsContainer.appendChild(dot);
+            });
+            
+            if (testimonialContainer) {
+                testimonialContainer.appendChild(dotsContainer);
+            }
+            
+            function goToSlide(index) {
+                // Hide current testimonial
+                testimonials[currentIndex].style.display = 'none';
+                document.querySelectorAll('.testimonial-container button')[currentIndex].className = 'w-3 h-3 rounded-full transition-colors duration-300 bg-gray-300';
+                
+                // Show new testimonial
+                currentIndex = index;
+                testimonials[currentIndex].style.display = 'block';
+                document.querySelectorAll('.testimonial-container button')[currentIndex].className = 'w-3 h-3 rounded-full transition-colors duration-300 bg-blue-600';
+            }
+            
+            // Hide all testimonials except first
+            testimonials.forEach((testimonial, index) => {
+                if (index !== 0) {
+                    testimonial.style.display = 'none';
+                }
+            });
+            
+            // Auto-play carousel
             setInterval(() => {
-                testimonials[currentTestimonial].classList.add('hidden');
-                currentTestimonial = (currentTestimonial + 1) % testimonials.length;
-                testimonials[currentTestimonial].classList.remove('hidden');
+                const nextIndex = (currentIndex + 1) % testimonials.length;
+                goToSlide(nextIndex);
             }, 5000);
         }
     }
     
-    // WhatsApp floating button (optional)
+    initTestimonialCarousel();
+    
+    // Services Carousel - Simple and Robust Version
+    function initServicesCarousel() {
+        // Wait for DOM to be ready
+        setTimeout(() => {
+            const track = document.getElementById('servicesCarouselTrack');
+            const prevButton = document.getElementById('servicesCarouselPrev');
+            const nextButton = document.getElementById('servicesCarouselNext');
+            const indicators = document.querySelectorAll('.carousel-indicator');
+            
+            if (!track || !prevButton || !nextButton || indicators.length === 0) {
+                console.log('Carousel elements not found, retrying...');
+                return;
+            }
+            
+            let currentSlide = 0;
+            const totalSlides = 6;
+            let autoPlayInterval;
+            
+            function updateCarousel() {
+                if (!track) return;
+                
+                const translateX = -currentSlide * 100;
+                track.style.transform = `translateX(${translateX}%)`;
+                
+                // Update indicators
+                indicators.forEach((indicator, index) => {
+                    if (index === currentSlide) {
+                        indicator.classList.remove('bg-gray-300');
+                        indicator.classList.add('bg-blue-600');
+                    } else {
+                        indicator.classList.remove('bg-blue-600');
+                        indicator.classList.add('bg-gray-300');
+                    }
+                });
+            }
+            
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateCarousel();
+            }
+            
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                updateCarousel();
+            }
+            
+            function goToSlide(slideIndex) {
+                currentSlide = slideIndex;
+                updateCarousel();
+            }
+            
+            function startAutoPlay() {
+                if (autoPlayInterval) {
+                    clearInterval(autoPlayInterval);
+                }
+                autoPlayInterval = setInterval(nextSlide, 4000);
+            }
+            
+            function stopAutoPlay() {
+                if (autoPlayInterval) {
+                    clearInterval(autoPlayInterval);
+                }
+            }
+            
+            // Event listeners
+            if (nextButton) {
+                nextButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    nextSlide();
+                    stopAutoPlay();
+                    startAutoPlay();
+                });
+            }
+            
+            if (prevButton) {
+                prevButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    prevSlide();
+                    stopAutoPlay();
+                    startAutoPlay();
+                });
+            }
+            
+            // Indicator click events
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    goToSlide(index);
+                    stopAutoPlay();
+                    startAutoPlay();
+                });
+            });
+            
+            // Hover pause/resume
+            const carouselContainer = track.closest('.relative');
+            if (carouselContainer) {
+                carouselContainer.addEventListener('mouseenter', stopAutoPlay);
+                carouselContainer.addEventListener('mouseleave', startAutoPlay);
+            }
+            
+            // Touch/swipe support
+            let startX = 0;
+            let isDragging = false;
+            
+            if (track) {
+                track.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isDragging = true;
+                    stopAutoPlay();
+                });
+                
+                track.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault();
+                });
+                
+                track.addEventListener('touchend', (e) => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    
+                    const endX = e.changedTouches[0].clientX;
+                    const diff = startX - endX;
+                    
+                    if (Math.abs(diff) > 50) {
+                        if (diff > 0) {
+                            nextSlide();
+                        } else {
+                            prevSlide();
+                        }
+                    }
+                    startAutoPlay();
+                });
+            }
+            
+            // Initialize
+            updateCarousel();
+            startAutoPlay();
+            
+        }, 100); // Small delay to ensure DOM is ready
+    }
+    
+    // Initialize carousel
+    initServicesCarousel();
+    
+    // WhatsApp floating button
     function createWhatsAppButton() {
         const whatsappButton = document.createElement('a');
-        whatsappButton.href = 'https://wa.me/6281234567890';
+        whatsappButton.href = 'https://wa.me/6282144888116';
         whatsappButton.target = '_blank';
         whatsappButton.className = 'fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition duration-300 z-50';
         whatsappButton.innerHTML = '<i class="fab fa-whatsapp text-2xl"></i>';
@@ -211,8 +392,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(whatsappButton);
     }
     
-    // Uncomment to add floating WhatsApp button
-    // createWhatsAppButton();
+    // Add floating WhatsApp button
+    createWhatsAppButton();
     
     // Back to top button
     function createBackToTopButton() {

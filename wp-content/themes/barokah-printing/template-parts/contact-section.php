@@ -1,5 +1,8 @@
 <!-- Contact Section -->
-<section id="kontak" class="py-20 bg-blue-600 text-white">
+<section id="kontak" class="py-20 bg-blue-600 text                    <a href="tel:+6282144888116" class="flex items-center bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded-lg transition duration-300">
+                        <i class="fas fa-phone text-xl mr-3"></i>
+                        <span>Telepon Langsung</span>
+                    </a>te">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
             <h2 class="text-3xl md:text-4xl font-bold mb-4">Hubungi Kami Sekarang</h2>
@@ -35,8 +38,8 @@
                         <div>
                             <h4 class="font-semibold mb-1">Telepon</h4>
                             <p class="text-blue-100">
-                                +62 812-3456-7890<br>
-                                +62 21-1234-5678
+                                +62 821-4488-8116<br>
+                                WhatsApp: +62 821-4488-8116
                             </p>
                         </div>
                     </div>
@@ -61,8 +64,9 @@
                         <div>
                             <h4 class="font-semibold mb-1">Jam Operasional</h4>
                             <p class="text-blue-100">
-                                Senin - Sabtu: 08:00 - 17:00<br>
-                                Minggu: 09:00 - 15:00
+                                Senin - Kamis & Sabtu: 08:00 - 21:00<br>
+                                Jumat: 08:00 - 11:00 & 13:00 - 21:00<br>
+                                <span class="text-blue-200">Minggu: Tutup</span>
                             </p>
                         </div>
                     </div>
@@ -70,7 +74,7 @@
                 
                 <!-- Quick Contact Buttons -->
                 <div class="mt-8 space-y-4">
-                    <a href="https://wa.me/6281234567890" target="_blank" class="flex items-center bg-green-500 hover:bg-green-600 px-6 py-3 rounded-lg transition duration-300">
+                    <a href="https://wa.me/6282144888116" target="_blank" class="flex items-center bg-green-500 hover:bg-green-600 px-6 py-3 rounded-lg transition duration-300">
                         <i class="fab fa-whatsapp text-xl mr-3"></i>
                         <span>Chat via WhatsApp</span>
                     </a>
@@ -88,7 +92,7 @@
                 <?php echo do_shortcode('[contact-form-7 id="1" title="Contact form 1"]'); ?>
                 
                 <!-- Fallback form if Contact Form 7 is not installed -->
-                <form class="space-y-6" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
+                <form class="space-y-6" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post" enctype="multipart/form-data">
                     <?php wp_nonce_field('contact_form_action', 'contact_form_nonce'); ?>
                     <input type="hidden" name="action" value="handle_contact_form">
                     
@@ -127,6 +131,12 @@
                         <textarea name="message" required rows="4" placeholder="Ceritakan detail kebutuhan percetakan Anda..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
                     </div>
                     
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Upload File Desain (Opsional)</label>
+                        <input type="file" name="design_file" accept=".jpg,.jpeg,.png,.pdf,.ai,.psd,.eps,.svg" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <p class="text-sm text-gray-500 mt-1">Format: JPG, PNG, PDF, AI, PSD, EPS, SVG (Maksimal: 10MB)</p>
+                    </div>
+                    
                     <button type="submit" class="w-full bg-blue-600 text-white hover:bg-blue-700 px-6 py-4 rounded-lg font-semibold text-lg transition duration-300">
                         <i class="fas fa-paper-plane mr-2"></i>
                         Kirim Pesan
@@ -149,7 +159,11 @@
                 <i class="fas fa-gift mr-2"></i>
                 Klaim Promo Sekarang
             </a>
-            <a href="https://wa.me/6281234567890" target="_blank" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold text-lg transition duration-300">
+            <a href="https://wa.me/6282144888116" target="_blank" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-lg font-semibold text-lg transition duration-300">
+                <i class="fab fa-whatsapp mr-2"></i>
+                Chat WhatsApp
+            </a>
+        </div>
                 <i class="fab fa-whatsapp mr-2"></i>
                 Chat Langsung
             </a>

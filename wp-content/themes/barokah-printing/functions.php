@@ -135,7 +135,8 @@ add_action('save_post', 'save_service_price');
 function handle_contact_form() {
     // Verify nonce
     if (!wp_verify_nonce($_POST['contact_form_nonce'], 'contact_form_action')) {
-        wp_die('Security check failed');
+        wp_redirect(add_query_arg('contact', 'error', wp_get_referer()));
+        exit;
     }
     
     // Sanitize form data
@@ -144,6 +145,40 @@ function handle_contact_form() {
     $email = sanitize_email($_POST['email']);
     $service = sanitize_text_field($_POST['service']);
     $message = sanitize_textarea_field($_POST['message']);
+    
+    // Handle file upload
+    $uploaded_file = '';
+    $upload_error = '';
+    
+    if (isset($_FILES['design_file']) && $_FILES['design_file']['error'] !== UPLOAD_ERR_NO_FILE) {
+        if ($_FILES['design_file']['error'] === UPLOAD_ERR_OK) {
+            $allowed_types = array('jpg', 'jpeg', 'png', 'pdf', 'ai', 'psd', 'eps', 'svg');
+            $file_info = pathinfo($_FILES['design_file']['name']);
+            $file_extension = strtolower($file_info['extension']);
+            
+            // Validate file type
+            if (in_array($file_extension, $allowed_types)) {
+                // Validate file size (10MB = 10485760 bytes)
+                if ($_FILES['design_file']['size'] <= 10485760) {
+                    $upload_dir = wp_upload_dir();
+                    $filename = sanitize_file_name($file_info['filename']) . '_' . time() . '.' . $file_extension;
+                    $upload_path = $upload_dir['path'] . '/' . $filename;
+                    
+                    if (move_uploaded_file($_FILES['design_file']['tmp_name'], $upload_path)) {
+                        $uploaded_file = $upload_dir['url'] . '/' . $filename;
+                    } else {
+                        $upload_error = 'Gagal mengupload file.';
+                    }
+                } else {
+                    $upload_error = 'File terlalu besar. Maksimal 10MB.';
+                }
+            } else {
+                $upload_error = 'Format file tidak didukung.';
+            }
+        } else {
+            $upload_error = 'Error saat mengupload file.';
+        }
+    }
     
     // Prepare email
     $to = get_option('admin_email');
@@ -154,6 +189,13 @@ function handle_contact_form() {
     $body .= "Email: $email\n";
     $body .= "Layanan: $service\n";
     $body .= "Pesan: $message\n\n";
+    
+    if ($uploaded_file) {
+        $body .= "File Desain: $uploaded_file\n\n";
+    } elseif ($upload_error) {
+        $body .= "Error Upload File: $upload_error\n\n";
+    }
+    
     $body .= "Dikirim dari: " . home_url();
     
     $headers = array(
