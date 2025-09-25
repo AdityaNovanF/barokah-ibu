@@ -115,10 +115,10 @@
                         </div>
                     <?php else : ?>
                         <div class="flex flex-col">
-                            <a href="<?php echo home_url(); ?>" class="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors duration-200 leading-tight">
-                                BAROKAH IBU
+                            <a href="<?php echo home_url(); ?>" class="text-2xl font-bold text-blue-600 uppercase hover:text-blue-700 transition-colors duration-200 leading-tight">
+                                Barokah Ibu
                             </a>
-                            <span class="text-gray-700 italic text-sm tracking-widest">D i g i t a l  p r i n t i n g</span>
+                            <span class="text-gray-700 italic text-xs tracking-widest">D i g i t a l  p r i n t i n g</span>
                         </div>
                     <?php endif; ?>
                 </div>

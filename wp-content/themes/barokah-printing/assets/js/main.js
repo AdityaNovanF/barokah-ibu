@@ -1,5 +1,221 @@
 // Main JavaScript for Barokah Printing Theme
+
+// Portfolio Modal Functions - Global Scope
+window.openPortfolioModal = function(portfolioId) {
+    const modal = document.getElementById('portfolioModal');
+    if (!modal) return;
+    
+    const modalContentEl = modal.querySelector('#modalContent');
+    if (!modalContentEl) return;
+    
+    // Check if portfolio data exists
+    if (!window.portfolioData || !window.portfolioData[portfolioId]) return;
+    
+    const portfolio = window.portfolioData[portfolioId];
+    // Populate modal content
+    const titleEl = document.getElementById('modalTitle');
+    const imageEl = document.getElementById('modalMainImage');
+    const contentEl = document.getElementById('modalContentText');
+    const dateEl = document.getElementById('modalDate');
+    
+    if (titleEl) titleEl.textContent = portfolio.title;
+    if (imageEl) {
+        // Enhanced image loading with fallback
+        const imageContainer = document.getElementById('modalImageContainer');
+        
+        // Function to handle image loading
+        const loadImage = (src) => {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(src);
+                img.onerror = () => reject();
+                img.src = src;
+            });
+        };
+        
+        // Try multiple image sources
+        const imageSources = [
+            portfolio.image,
+            // Fallback to any featured image from the post
+            portfolio.featured_image,
+            // Generate a colored placeholder as last resort
+            (() => {
+                const colorCodes = {
+                    'green': '10B981',
+                    'yellow': 'F59E0B', 
+                    'blue': '3B82F6',
+                    'purple': '8B5CF6',
+                    'red': 'EF4444',
+                    'indigo': '6366F1',
+                    'pink': 'EC4899'
+                };
+                const colorCode = colorCodes[portfolio.color] || '3B82F6';
+                return `https://via.placeholder.com/1200x800/${colorCode}/FFFFFF?text=${encodeURIComponent(portfolio.title.substring(0, 20))}`;
+            })()
+        ].filter(Boolean);
+        
+        // Try each image source until one works
+        let imageLoaded = false;
+        const tryNextImage = async (index = 0) => {
+            if (index >= imageSources.length || imageLoaded) return;
+            
+            try {
+                await loadImage(imageSources[index]);
+                imageEl.src = imageSources[index];
+                imageEl.alt = portfolio.title;
+                imageLoaded = true;
+            } catch {
+                tryNextImage(index + 1);
+            }
+        };
+        
+        tryNextImage();
+    }
+    if (contentEl) {
+        contentEl.innerHTML = portfolio.content || portfolio.excerpt || '<p>Detail portfolio akan segera tersedia.</p>';
+    }
+    if (dateEl) dateEl.textContent = portfolio.date;
+    
+    // Set category badge
+    const categoryContainer = document.getElementById('modalCategory');
+    if (categoryContainer && portfolio.category) {
+        const colorMap = {
+            'green': 'bg-green-600',
+            'yellow': 'bg-yellow-500', 
+            'blue': 'bg-blue-600',
+            'purple': 'bg-purple-600',
+            'red': 'bg-red-600',
+            'indigo': 'bg-indigo-600',
+            'pink': 'bg-pink-600'
+        };
+        const colorClass = colorMap[portfolio.color] || 'bg-blue-600';
+        categoryContainer.innerHTML = `<span class="${colorClass} text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">${portfolio.category}</span>`;
+    }
+    
+    // Set category name in meta section
+    const categoryNameEl = document.getElementById('modalCategoryName');
+    if (categoryNameEl && portfolio.category) {
+        categoryNameEl.textContent = portfolio.category;
+    }
+    
+    // Show modal with animation
+    modal.style.display = 'flex';
+    
+    // Animate in
+    setTimeout(() => {
+        modalContentEl.style.transform = 'scale(1)';
+        modalContentEl.style.opacity = '1';
+    }, 10);
+    
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+};
+
+window.closePortfolioModal = function() {
+    const modal = document.getElementById('portfolioModal');
+    if (!modal) return;
+    
+    const modalContentEl = modal.querySelector('#modalContent');
+    if (!modalContentEl) return;
+    
+    // Animate out
+    modalContentEl.style.transform = 'scale(0.95)';
+    modalContentEl.style.opacity = '0';
+    
+    setTimeout(() => {
+        modal.style.display = 'none';
+        
+        // Restore body scroll
+        document.body.style.overflow = '';
+    }, 300);
+};
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Modal Event Listeners
+    function initModalEvents() {
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('portfolioModal');
+            if (modal && e.target === modal && modal.style.display === 'flex') {
+                closePortfolioModal();
+            }
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('portfolioModal');
+                if (modal && modal.style.display === 'flex') {
+                    closePortfolioModal();
+                }
+            }
+        });
+    }
+    
+    // Initialize all features
+    initModalEvents();
+    
+    // Enhanced Portfolio Image Loading
+    function initPortfolioImageLoading() {
+        const images = document.querySelectorAll('.portfolio-image');
+        
+        images.forEach((img, index) => {
+            const container = img.parentElement;
+            
+            // Function to remove loading elements
+            function removeLoadingElements() {
+                const spinner = container.querySelector('.animate-spin');
+                const shimmer = container.querySelector('.animate-pulse');
+                
+                if (spinner && spinner.parentElement) {
+                    spinner.parentElement.remove();
+                }
+                if (shimmer) {
+                    shimmer.remove();  
+                }
+            }
+            
+            // Check if image is already loaded
+            if (img.complete && img.naturalWidth > 0) {
+                img.classList.remove('opacity-0');
+                img.classList.add('opacity-100');
+                removeLoadingElements();
+            } else {
+                // Set up load event
+                img.addEventListener('load', function() {
+                    this.classList.remove('opacity-0');
+                    this.classList.add('opacity-100');
+                    removeLoadingElements();
+                });
+                
+                // Set up error event
+                img.addEventListener('error', function() {
+                    
+                    // Create fallback URL
+                    const title = this.alt || 'Portfolio Item';
+                    this.src = `https://via.placeholder.com/800x600/6B7280/FFFFFF?text=${encodeURIComponent(title)}`;
+                    
+                    // Still show the image even if it's a fallback
+                    this.classList.remove('opacity-0');
+                    this.classList.add('opacity-100');
+                    removeLoadingElements();
+                });
+                
+                // Timeout fallback (in case image takes too long)
+                setTimeout(() => {
+                    if (img.classList.contains('opacity-0')) {
+                        
+                        img.classList.remove('opacity-0');
+                        img.classList.add('opacity-100');
+                        removeLoadingElements();
+                    }
+                }, 10000); // 10 second timeout
+            }
+        });
+    }
+    
+    // Initialize portfolio image loading
+    initPortfolioImageLoading();
     
     // Mobile menu toggle
     const mobileMenuButton = document.querySelector('.mobile-menu-button');
@@ -246,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const indicators = document.querySelectorAll('.carousel-indicator');
             
             if (!track || !prevButton || !nextButton || indicators.length === 0) {
-                console.log('Carousel elements not found, retrying...');
+                
                 return;
             }
             
@@ -430,10 +646,10 @@ if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
             .then((registration) => {
-                console.log('SW registered: ', registration);
+                
             })
             .catch((registrationError) => {
-                console.log('SW registration failed: ', registrationError);
+                
             });
     });
 }

@@ -770,108 +770,552 @@
         
         <!-- Portfolio Filter -->
         <div class="flex flex-wrap justify-center mb-12 gap-4">
-            <button class="portfolio-filter active bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition duration-300" data-filter="all">
+            <button class="portfolio-filter active bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg" data-filter="semua">
                 Semua
             </button>
-            <button class="portfolio-filter bg-gray-200 text-gray-700 hover:bg-gray-300 px-6 py-3 rounded-lg font-semibold transition duration-300" data-filter="banner">
-                Banner
-            </button>
-            <button class="portfolio-filter bg-gray-200 text-gray-700 hover:bg-gray-300 px-6 py-3 rounded-lg font-semibold transition duration-300" data-filter="brosur">
-                Brosur
-            </button>
-            <button class="portfolio-filter bg-gray-200 text-gray-700 hover:bg-gray-300 px-6 py-3 rounded-lg font-semibold transition duration-300" data-filter="packaging">
-                Packaging
-            </button>
+            <?php
+            $categories = get_terms(array(
+                'taxonomy' => 'portfolio_category',
+                'hide_empty' => false // Changed to false to show all categories even if empty
+            ));
+            
+            if (!empty($categories) && !is_wp_error($categories)) {
+                foreach ($categories as $category) {
+                    printf(
+                        '<button class="portfolio-filter bg-gray-200 text-gray-700 hover:bg-gray-300 px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-lg" data-filter="%s">%s</button>',
+                        esc_attr($category->slug),
+                        esc_html($category->name)
+                    );
+                }
+            } else {
+                // Debug: Show if no categories found
+                if (current_user_can('administrator')) {
+                    echo '<div class="text-sm text-gray-500 px-4 py-2 bg-yellow-100 rounded">No categories found. Categories will be created automatically. Please refresh the page.</div>';
+                }
+            }
+            ?>
         </div>
         
         <!-- Portfolio Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Portfolio Item 1 -->
-            <div class="portfolio-item banner group relative overflow-hidden rounded-lg shadow-lg">
-                <img src="https://via.placeholder.com/400x300/3B82F6/FFFFFF?text=BANNER+RESTO" alt="Banner Restaurant" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
-                <div class="absolute inset-0 bg-blue-700 bg-opacity-0 group-hover:bg-opacity-80 transition duration-300 flex items-center justify-center">
-                    <div class="text-white text-center opacity-0 group-hover:opacity-100 transition duration-300">
-                        <h3 class="text-xl font-semibold mb-2">Banner Restaurant</h3>
-                        <p class="mb-4">Banner promosi untuk restaurant premium</p>
-                        <button class="bg-white text-blue-700 px-4 py-2 rounded-lg font-semibold">
-                            Lihat Detail
-                        </button>
-                    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
+            <!-- Loading Indicator -->
+            <div id="portfolioLoadingIndicator" class="hidden absolute inset-0 bg-white bg-opacity-75 z-10 flex items-center justify-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-4 h-4 bg-blue-600 rounded-full animate-pulse"></div>
+                    <div class="w-4 h-4 bg-blue-600 rounded-full animate-pulse" style="animation-delay: 0.1s;"></div>
+                    <div class="w-4 h-4 bg-blue-600 rounded-full animate-pulse" style="animation-delay: 0.2s;"></div>
                 </div>
             </div>
+            <?php
+            $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+            // Show all published portfolio posts (with intelligent image fallback)
+            $args = array(
+                'post_type' => 'portfolio',
+                'posts_per_page' => 6,
+                'orderby' => 'date',
+                'order' => 'DESC',
+                'paged' => $paged,
+                'post_status' => 'publish'
+            );
             
-            <!-- Portfolio Item 2 -->
-            <div class="portfolio-item brosur group relative overflow-hidden rounded-lg shadow-lg">
-                <img src="https://via.placeholder.com/400x300/10B981/FFFFFF?text=BROSUR+TRAVEL" alt="Brosur Travel" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
-                <div class="absolute inset-0 bg-green-600 bg-opacity-0 group-hover:bg-opacity-80 transition duration-300 flex items-center justify-center">
-                    <div class="text-white text-center opacity-0 group-hover:opacity-100 transition duration-300">
-                        <h3 class="text-xl font-semibold mb-2">Brosur Travel</h3>
-                        <p class="mb-4">Brosur tour dan travel agency</p>
-                        <button class="bg-white text-green-600 px-4 py-2 rounded-lg font-semibold">
-                            Lihat Detail
-                        </button>
+            $portfolio_query = new WP_Query($args);
+            
+
+            
+            if ($portfolio_query->have_posts()) :
+                while ($portfolio_query->have_posts()) : $portfolio_query->the_post();
+                    // Get categories for this portfolio item
+                    $categories = get_the_terms(get_the_ID(), 'portfolio_category');
+                    $category_classes = '';
+                    $category_name = '';
+                    if ($categories && !is_wp_error($categories)) {
+                        foreach ($categories as $category) {
+                            $category_classes .= ' ' . $category->slug;
+                            $category_name = $category->name;
+                        }
+                    }
+                    
+                    // Get primary category color class with dynamic assignment
+                    $color_classes = array(
+                        'banner' => 'blue',
+                        'brosur' => 'green', 
+                        'packaging' => 'yellow',
+                        'kartu-nama' => 'purple',
+                        'stiker' => 'red',
+                        'poster' => 'indigo',
+                        'spanduk' => 'pink'
+                    );
+                    
+                    $primary_color = 'blue'; // default color
+                    if ($categories && !empty($categories)) {
+                        $category_slug = $categories[0]->slug;
+                        if (isset($color_classes[$category_slug])) {
+                            $primary_color = $color_classes[$category_slug];
+                        } else {
+                            // Auto-assign colors for new categories
+                            $available_colors = array('blue', 'green', 'yellow', 'purple', 'red', 'indigo', 'pink');
+                            $color_index = abs(crc32($category_slug)) % count($available_colors);
+                            $primary_color = $available_colors[$color_index];
+                        }
+                    }
+            ?>
+                    <div class="portfolio-item<?php echo esc_attr($category_classes); ?> group relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+                         onclick="openPortfolioModal(<?php echo $post_id; ?>)">
+                        <?php 
+                        // Get thumbnail URL with enhanced fallback system
+                        $thumbnail_url = '';
+                        $image_source = 'placeholder';
+                        $post_id = get_the_ID();
+                        $post_title = get_the_title();
+                        
+                        // Priority 1: WordPress Featured Image (multiple size attempts)
+                        if (has_post_thumbnail($post_id)) {
+                            $sizes = array('large', 'medium_large', 'medium', 'portfolio-thumbnail', 'thumbnail', 'full');
+                            foreach ($sizes as $size) {
+                                $url = get_the_post_thumbnail_url($post_id, $size);
+                                if ($url && $url !== false && !empty($url)) {
+                                    // Verify the image exists and is accessible
+                                    $thumbnail_url = $url;
+                                    $image_source = "featured-{$size}";
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        // Priority 2: Try to get attachment directly if featured image fails
+                        if (!$thumbnail_url) {
+                            $thumbnail_id = get_post_thumbnail_id($post_id);
+                            if ($thumbnail_id) {
+                                $attachment_url = wp_get_attachment_url($thumbnail_id);
+                                if ($attachment_url) {
+                                    $thumbnail_url = $attachment_url;
+                                    $image_source = 'attachment-direct';
+                                }
+                            }
+                        }
+                        
+                        // Priority 3: Check for first image in post content
+                        if (!$thumbnail_url) {
+                            $post_content = get_post_field('post_content', $post_id);
+                            preg_match('/<img[^>]+src=["\']([^"\']+)["\'][^>]*>/i', $post_content, $matches);
+                            if (!empty($matches[1])) {
+                                $thumbnail_url = $matches[1];
+                                $image_source = 'content-image';
+                            }
+                        }
+                        
+                        // Priority 4: External Image URL from custom field
+                        if (!$thumbnail_url) {
+                            $external_image = get_post_meta($post_id, 'external_image_url', true);
+                            if ($external_image && filter_var($external_image, FILTER_VALIDATE_URL)) {
+                                $thumbnail_url = $external_image;
+                                $image_source = 'external';
+                            }
+                        }
+                        
+                        // Priority 5: Check gallery attachments
+                        if (!$thumbnail_url) {
+                            $attachments = get_posts(array(
+                                'post_type' => 'attachment',
+                                'post_mime_type' => 'image',
+                                'post_parent' => $post_id,
+                                'posts_per_page' => 1,
+                                'post_status' => 'inherit'
+                            ));
+                            if (!empty($attachments)) {
+                                $attachment_url = wp_get_attachment_url($attachments[0]->ID);
+                                if ($attachment_url) {
+                                    $thumbnail_url = $attachment_url;
+                                    $image_source = 'gallery-attachment';
+                                }
+                            }
+                        }
+                        
+                        // Priority 6: High-quality category-based placeholder with better design
+                        if (!$thumbnail_url) {
+                            $color_code = '3B82F6'; // default blue
+                            $text_color = 'FFFFFF';
+                            $bg_pattern = '';
+                            
+                            if ($primary_color == 'green') {
+                                $color_code = '10B981'; // emerald
+                            } elseif ($primary_color == 'yellow') {
+                                $color_code = 'F59E0B'; // amber
+                                $text_color = '1F2937'; // darker text for yellow bg
+                            } elseif ($primary_color == 'blue') {
+                                $color_code = '3B82F6'; // blue
+                            }
+                            
+                            $placeholder_text = wp_trim_words($post_title, 2, '');
+                            $encoded_title = urlencode($placeholder_text ?: 'Portfolio');
+                            $thumbnail_url = "https://via.placeholder.com/800x600/{$color_code}/{$text_color}?text={$encoded_title}";
+                            $image_source = 'smart-placeholder';
+                        }
+                        
+
+                        ?>
+                        
+                        <!-- Loading States -->
+                        <div class="loading-overlay absolute inset-0 flex items-center justify-center bg-gray-100 z-20">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-<?php echo $primary_color; ?>-500"></div>
+                        </div>
+                        
+                        <!-- Shimmer Effect -->
+                        <div class="shimmer-overlay absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-50 to-gray-200 animate-pulse z-10"></div>
+                        
+                        <!-- Main Portfolio Image -->
+                        <img 
+                            src="<?php echo esc_url($thumbnail_url); ?>" 
+                            alt="<?php echo esc_attr($post_title . ' - Portfolio Barokah Ibu Digital Printing'); ?>"
+                            class="portfolio-image w-full h-80 object-cover transition-all duration-500 ease-out opacity-0 group-hover:scale-110 transform-gpu"
+                            loading="lazy"
+                            data-post-id="<?php echo $post_id; ?>"
+                            data-image-source="<?php echo esc_attr($image_source); ?>"
+                            onload="
+                                console.log('✅ Image loaded successfully:', '<?php echo addslashes($post_title); ?>', 'Source: <?php echo $image_source; ?>');
+                                this.classList.remove('opacity-0'); 
+                                this.classList.add('opacity-100');
+                                const container = this.parentElement;
+                                const loadingOverlay = container.querySelector('.loading-overlay');
+                                const shimmerOverlay = container.querySelector('.shimmer-overlay');
+                                if (loadingOverlay) loadingOverlay.remove();
+                                if (shimmerOverlay) shimmerOverlay.remove();
+                            "
+                            onerror="
+                                console.error('❌ Image load failed for:', '<?php echo addslashes($post_title); ?>', 'Original source:', this.src);
+                                const fallbackUrl = 'https://via.placeholder.com/800x600/<?php echo $primary_color === 'green' ? '10B981' : ($primary_color === 'yellow' ? 'F59E0B' : '3B82F6'); ?>/FFFFFF?text=<?php echo urlencode(wp_trim_words($post_title, 2, '')); ?>';
+                                if (this.src !== fallbackUrl) {
+                                    console.log('🔄 Trying fallback image...');
+                                    this.src = fallbackUrl;
+                                } else {
+                                    console.log('💡 Using final placeholder');
+                                    this.classList.remove('opacity-0'); 
+                                    this.classList.add('opacity-100');
+                                    const container = this.parentElement;
+                                    const loadingOverlay = container.querySelector('.loading-overlay');
+                                    const shimmerOverlay = container.querySelector('.shimmer-overlay');
+                                    if (loadingOverlay) loadingOverlay.remove();
+                                    if (shimmerOverlay) shimmerOverlay.remove();
+                                }
+                            "
+                        />
+                        
+                        <!-- Enhanced Hover Overlay with Center Button -->
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center z-20">
+                            <!-- Center Transparent Button -->
+                            <button 
+                                onclick="openPortfolioModal(<?php echo $post_id; ?>); event.stopPropagation();" 
+                                class="bg-white bg-opacity-20 backdrop-blur-sm text-white border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-opacity-30 transition-all duration-300 opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 shadow-xl">
+                                Lihat Detail
+                            </button>
+                        </div>
+                        
+                        <!-- Bottom Info Bar -->
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 z-10">
+                            <h3 class="text-white text-lg font-bold mb-1"><?php the_title(); ?></h3>
+                            <?php if ($category_name) : ?>
+                                <span class="inline-block bg-<?php echo $primary_color; ?>-600 text-white px-2 py-1 rounded text-xs font-medium">
+                                    <?php echo esc_html($category_name); ?>
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+            <?php
+                endwhile;
+                wp_reset_postdata();
+            else :
+                // No portfolio posts found - show message for admin or placeholder
+            ?>
+                <div class="col-span-full text-center py-16">
+                    <?php if (current_user_can('administrator')) : ?>
+                        <!-- Message for admin users -->
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-8 max-w-2xl mx-auto">
+                            <div class="text-blue-600 mb-4">
+                                <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">Belum Ada Portfolio</h3>
+                            <p class="text-gray-600 mb-6">
+                                Anda belum menambahkan portfolio dengan featured image. Tambahkan portfolio pertama Anda!
+                            </p>
+                            <a href="<?php echo admin_url('post-new.php?post_type=portfolio'); ?>" 
+                               class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                                + Tambah Portfolio
+                            </a>
+                        </div>
+                    <?php else : ?>
+                        <!-- Message for public visitors -->
+                        <div class="max-w-xl mx-auto">
+                            <div class="text-gray-400 mb-4">
+                                <svg class="w-20 h-20 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-semibold text-gray-800 mb-3">Portfolio Sedang Dipersiapkan</h3>
+                            <p class="text-gray-600">
+                                Kami sedang mempersiapkan koleksi portfolio terbaik untuk Anda. Segera akan hadir karya-karya menakjubkan!
+                            </p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            <?php
+            endif;
+            
+            // Prepare portfolio data for JavaScript modal
+            $portfolio_data = array();
+            if ($portfolio_query->have_posts()) {
+                $portfolio_query->rewind_posts();
+                while ($portfolio_query->have_posts()) {
+                    $portfolio_query->the_post();
+                    $post_categories = get_the_terms(get_the_ID(), 'portfolio_category');
+                    $category_name = '';
+                    $primary_color = 'blue';
+                    
+                    if ($post_categories && !is_wp_error($post_categories)) {
+                        $category_name = $post_categories[0]->name;
+                        $color_classes = array(
+                            'banner' => 'blue',
+                            'brosur' => 'green', 
+                            'packaging' => 'yellow',
+                            'kartu-nama' => 'purple',
+                            'stiker' => 'red',
+                            'poster' => 'indigo',
+                            'spanduk' => 'pink'
+                        );
+                        
+                        $category_slug = $post_categories[0]->slug;
+                        if (isset($color_classes[$category_slug])) {
+                            $primary_color = $color_classes[$category_slug];
+                        } else {
+                            // Auto-assign colors for new categories
+                            $available_colors = array('blue', 'green', 'yellow', 'purple', 'red', 'indigo', 'pink');
+                            $color_index = abs(crc32($category_slug)) % count($available_colors);
+                            $primary_color = $available_colors[$color_index];
+                        }
+                    }
+                    
+                    // Enhanced image collection - gather all possible image sources
+                    $modal_images = array();
+                    
+                    // Priority 1: Featured image (multiple sizes)
+                    if (has_post_thumbnail()) {
+                        $sizes = array('large', 'medium_large', 'medium', 'full');
+                        foreach ($sizes as $size) {
+                            $img_url = get_the_post_thumbnail_url(get_the_ID(), $size);
+                            if ($img_url && !in_array($img_url, $modal_images)) {
+                                $modal_images[] = $img_url;
+                            }
+                        }
+                    }
+                    
+                    // Priority 2: External image URL from meta
+                    $external_image = get_post_meta(get_the_ID(), 'external_image_url', true);
+                    if ($external_image && filter_var($external_image, FILTER_VALIDATE_URL)) {
+                        $modal_images[] = $external_image;
+                    }
+                    
+                    // Priority 3: Images from content
+                    $content = get_the_content();
+                    if ($content) {
+                        preg_match_all('/<img[^>]+src="([^"]+)"/', $content, $matches);
+                        if (!empty($matches[1])) {
+                            foreach ($matches[1] as $img_src) {
+                                if (filter_var($img_src, FILTER_VALIDATE_URL) && !in_array($img_src, $modal_images)) {
+                                    $modal_images[] = $img_src;
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Primary image (first available)
+                    $primary_image = !empty($modal_images) ? $modal_images[0] : '';
+                    
+                    // Generate final fallback only if no real images found
+                    if (empty($modal_images)) {
+                        $color_codes = array(
+                            'green' => '10B981',
+                            'yellow' => 'F59E0B',
+                            'blue' => '3B82F6',
+                            'purple' => '8B5CF6',
+                            'red' => 'EF4444',
+                            'indigo' => '6366F1',
+                            'pink' => 'EC4899'
+                        );
+                        $color_code = isset($color_codes[$primary_color]) ? $color_codes[$primary_color] : '3B82F6';
+                        $primary_image = "https://via.placeholder.com/1200x800/{$color_code}/FFFFFF?text=" . urlencode(wp_trim_words(get_the_title(), 2, ''));
+                        $modal_images[] = $primary_image;
+                    }
+                    
+                    $portfolio_data[get_the_ID()] = array(
+                        'id' => get_the_ID(),
+                        'title' => get_the_title(),
+                        'content' => get_the_content(),
+                        'excerpt' => get_the_excerpt(),
+                        'image' => $primary_image,
+                        'images' => $modal_images,
+                        'featured_image' => has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'large') : '',
+                        'category' => $category_name,
+                        'color' => $primary_color,
+                        'date' => get_the_date('j F Y'),
+                        'permalink' => get_permalink()
+                    );
+                }
+                wp_reset_postdata();
+            }
+            ?>
+            
+            <!-- Portfolio Data for JavaScript -->
+            <script>
+                window.portfolioData = <?php echo json_encode($portfolio_data); ?>;
+                
+                // Initialize modal fallback if needed
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(function() {
+                        if (typeof window.openPortfolioModal !== 'function') {
+                            
+                            // Create fallback function if main function is not loaded
+                            window.openPortfolioModal = function(portfolioId) {
+                                if (!window.portfolioData || !window.portfolioData[portfolioId]) {
+                                    return;
+                                }
+                                
+                                const portfolio = window.portfolioData[portfolioId];
+                                const modal = document.getElementById('portfolioModal');
+                                if (!modal) return;
+                                
+                                // Simple modal display
+                                const titleEl = document.getElementById('modalTitle');
+                                const imageEl = document.getElementById('modalMainImage');
+                                const contentEl = document.getElementById('modalContentText');
+                                const dateEl = document.getElementById('modalDate');
+                                
+                                if (titleEl) titleEl.textContent = portfolio.title;
+                                if (imageEl) {
+                                    // Use first available image from images array
+                                    const imageSrc = portfolio.images && portfolio.images.length > 0 ? portfolio.images[0] : portfolio.image;
+                                    imageEl.src = imageSrc;
+                                    imageEl.alt = portfolio.title;
+                                }
+                                if (contentEl) {
+                                    contentEl.innerHTML = portfolio.content || portfolio.excerpt || '<p>Detail portfolio akan segera tersedia.</p>';
+                                }
+                                if (dateEl) dateEl.textContent = portfolio.date;
+                                
+                                // Set category
+                                const categoryContainer = document.getElementById('modalCategory');
+                                if (categoryContainer && portfolio.category) {
+                                    const colorClass = portfolio.color === 'green' ? 'bg-green-600' : (portfolio.color === 'yellow' ? 'bg-yellow-500' : 'bg-blue-600');
+                                    categoryContainer.innerHTML = '<span class="' + colorClass + ' text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">' + portfolio.category + '</span>';
+                                }
+                                
+                                // Set category name in meta section
+                                const categoryNameEl = document.getElementById('modalCategoryName');
+                                if (categoryNameEl && portfolio.category) {
+                                    categoryNameEl.textContent = portfolio.category;
+                                }
+                                
+                                // Show modal with inline styles
+                                modal.style.display = 'flex';
+                                document.body.style.overflow = 'hidden';
+                                
+                                // Animate in with slight delay
+                                setTimeout(function() {
+                                    const modalContentEl = modal.querySelector('#modalContent');
+                                    if (modalContentEl) {
+                                        modalContentEl.style.transform = 'scale(1)';
+                                        modalContentEl.style.opacity = '1';
+                                    }
+                                }, 10);
+                            };
+                            
+                            window.closePortfolioModal = function() {
+                                const modal = document.getElementById('portfolioModal');
+                                if (modal) {
+                                    const modalContentEl = modal.querySelector('#modalContent');
+                                    if (modalContentEl) {
+                                        modalContentEl.style.transform = 'scale(0.95)';
+                                        modalContentEl.style.opacity = '0';
+                                    }
+                                    
+                                    setTimeout(function() {
+                                        modal.style.display = 'none';
+                                        document.body.style.overflow = '';
+                                    }, 300);
+                                }
+                            };
+                        }
+                    }, 500);
+                });
+            </script>
+        </div>
+
+        <?php if ($portfolio_query->max_num_pages > 1) : ?>
+        <!-- Portfolio Navigation -->
+        <div class="mt-12 flex justify-center gap-4">
+            <?php if ($portfolio_query->found_posts > 6) : ?>
+                <a href="<?php echo get_post_type_archive_link('portfolio'); ?>" class="inline-flex items-center justify-center bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition duration-300">
+                    Lihat Semua Portfolio
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </a>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
+        
+
+        </div>
+    </div>
+</section>
+
+<!-- Portfolio Detail Modal -->
+<div id="portfolioModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden items-center justify-center p-4 pt-20">
+    <div id="modalContent" class="bg-white rounded-2xl max-w-3xl w-full max-h-[80vh] overflow-hidden shadow-2xl transform scale-95 opacity-0 transition-all duration-300">
+        <!-- Close Button -->
+        <button onclick="closePortfolioModal()" class="absolute top-4 right-4 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-3 rounded-full transition-all duration-200 z-10 w-12 h-12 flex items-center justify-center">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        
+        <!-- Modal Body -->
+        <div class="overflow-y-auto max-h-[80vh]">
+
+            <!-- Content -->
+            <div class="px-6 pb-6">
+                <!-- Title and Category - Centered -->
+                <div class="text-center mb-6">
+                    <h3 id="modalTitle" class="text-2xl font-bold text-gray-900 mb-2"></h3>
+                    <div id="modalCategory"></div>
+                </div>
+                
+                <!-- Description - Left Aligned -->
+                <div id="modalContentText" class="text-gray-700 leading-relaxed text-base mb-6 text-left"></div>
+                
+                <!-- Meta Information -->
+                <div class="mt-6 pt-6 border-t border-gray-200 text-center space-y-3">
+                    <div id="modalCategoryMeta" class="text-sm text-gray-600">
+                        <strong>Kategori:</strong> <span id="modalCategoryName" class="text-gray-700"></span>
+                    </div>
+                    <div class="text-sm text-gray-500">
+                        <strong>Tanggal:</strong> <span id="modalDate"></span>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Portfolio Item 3 -->
-            <div class="portfolio-item packaging group relative overflow-hidden rounded-lg shadow-lg">
-                <img src="https://via.placeholder.com/400x300/F59E0B/FFFFFF?text=BOX+MAKANAN" alt="Box Makanan" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
-                <div class="absolute inset-0 bg-yellow-500 bg-opacity-0 group-hover:bg-opacity-80 transition duration-300 flex items-center justify-center">
-                    <div class="text-white text-center opacity-0 group-hover:opacity-100 transition duration-300">
-                        <h3 class="text-xl font-semibold mb-2">Box Makanan</h3>
-                        <p class="mb-4">Packaging custom untuk food delivery</p>
-                        <button class="bg-white text-yellow-500 px-4 py-2 rounded-lg font-semibold">
-                            Lihat Detail
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Portfolio Item 4 -->
-            <div class="portfolio-item banner group relative overflow-hidden rounded-lg shadow-lg">
-                <img src="https://via.placeholder.com/400x300/EF4444/FFFFFF?text=SPANDUK+EVENT" alt="Spanduk Event" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
-                <div class="absolute inset-0 bg-red-600 bg-opacity-0 group-hover:bg-opacity-80 transition duration-300 flex items-center justify-center">
-                    <div class="text-white text-center opacity-0 group-hover:opacity-100 transition duration-300">
-                        <h3 class="text-xl font-semibold mb-2">Spanduk Event</h3>
-                        <p class="mb-4">Spanduk untuk event dan seminar</p>
-                        <button class="bg-white text-red-600 px-4 py-2 rounded-lg font-semibold">
-                            Lihat Detail
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Portfolio Item 5 -->
-            <div class="portfolio-item brosur group relative overflow-hidden rounded-lg shadow-lg">
-                <img src="https://via.placeholder.com/400x300/8B5CF6/FFFFFF?text=KATALOG+PRODUK" alt="Katalog Produk" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
-                <div class="absolute inset-0 bg-purple-600 bg-opacity-0 group-hover:bg-opacity-80 transition duration-300 flex items-center justify-center">
-                    <div class="text-white text-center opacity-0 group-hover:opacity-100 transition duration-300">
-                        <h3 class="text-xl font-semibold mb-2">Katalog Produk</h3>
-                        <p class="mb-4">Katalog produk untuk company profile</p>
-                        <button class="bg-white text-purple-600 px-4 py-2 rounded-lg font-semibold">
-                            Lihat Detail
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Portfolio Item 6 -->
-            <div class="portfolio-item packaging group relative overflow-hidden rounded-lg shadow-lg">
-                <img src="https://via.placeholder.com/400x300/06B6D4/FFFFFF?text=LABEL+PRODUK" alt="Label Produk" class="w-full h-64 object-cover group-hover:scale-110 transition duration-500">
-                <div class="absolute inset-0 bg-cyan-600 bg-opacity-0 group-hover:bg-opacity-80 transition duration-300 flex items-center justify-center">
-                    <div class="text-white text-center opacity-0 group-hover:opacity-100 transition duration-300">
-                        <h3 class="text-xl font-semibold mb-2">Label Produk</h3>
-                        <p class="mb-4">Label custom untuk produk minuman</p>
-                        <button class="bg-white text-cyan-600 px-4 py-2 rounded-lg font-semibold">
-                            Lihat Detail
-                        </button>
-                    </div>
+                
+                <!-- Action Buttons -->
+                <div class="mt-6 flex justify-center gap-3">
+                    <button onclick="closePortfolioModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 hover:-translate-y-0.5 shadow-lg">
+                        Tutup
+                    </button>
+                    <a id="modalContactBtn" href="#kontak" onclick="closePortfolioModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 hover:-translate-y-0.5 shadow-lg no-underline inline-block">
+                        Hubungi Kami
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-</section>
+</div>
 
 <!-- About Section -->
 <section id="tentang" class="py-20 bg-white">
@@ -1190,32 +1634,84 @@
 </section>
 
 <script>
-// Portfolio Filter
+// Portfolio Filter with Live Animation
 document.addEventListener('DOMContentLoaded', function() {
     const filterButtons = document.querySelectorAll('.portfolio-filter');
     const portfolioItems = document.querySelectorAll('.portfolio-item');
+    const portfolioGrid = document.querySelector('.grid');
+    
+    // Add initial transition styles to portfolio items
+    portfolioItems.forEach(item => {
+        item.style.transition = 'all 0.3s ease, opacity 0.3s ease, transform 0.3s ease';
+        item.style.opacity = '1';
+        item.style.transform = 'scale(1)';
+    });
     
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
-            // Remove active class from all buttons
+            // Prevent multiple clicks during animation
+            if (this.dataset.filtering === 'true') return;
+            
+            // Show loading indicator
+            const loadingIndicator = document.getElementById('portfolioLoadingIndicator');
+            if (loadingIndicator) {
+                loadingIndicator.classList.remove('hidden');
+            }
+            
+            // Mark as filtering
+            filterButtons.forEach(btn => btn.dataset.filtering = 'true');
+            
+            // Update button states with animation
             filterButtons.forEach(btn => {
                 btn.classList.remove('active', 'bg-blue-700', 'text-white');
                 btn.classList.add('bg-gray-200', 'text-gray-700');
+                btn.style.transform = 'scale(1)';
             });
             
-            // Add active class to clicked button
+            // Active button with bounce effect
             this.classList.add('active', 'bg-blue-700', 'text-white');
             this.classList.remove('bg-gray-200', 'text-gray-700');
+            this.style.transform = 'scale(1.05)';
+            
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
             
             const filterValue = this.getAttribute('data-filter');
             
-            portfolioItems.forEach(item => {
-                if (filterValue === 'all' || item.classList.contains(filterValue)) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
+            // Phase 1: Fade out all items
+            portfolioItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.9) translateY(10px)';
+                }, index * 30);
             });
+            
+            // Phase 2: Filter and show matching items
+            setTimeout(() => {
+                // Hide loading indicator
+                if (loadingIndicator) {
+                    loadingIndicator.classList.add('hidden');
+                }
+                
+                portfolioItems.forEach((item, index) => {
+                    if (filterValue === 'semua' || item.classList.contains(filterValue)) {
+                        item.style.display = 'block';
+                        // Staggered entrance animation
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'scale(1) translateY(0px)';
+                        }, index * 80);
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Re-enable buttons
+                setTimeout(() => {
+                    filterButtons.forEach(btn => btn.dataset.filtering = 'false');
+                }, 500);
+            }, 300);
         });
     });
     

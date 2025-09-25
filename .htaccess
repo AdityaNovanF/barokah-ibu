@@ -1,4 +1,49 @@
 
+# UPLOAD FIX - Konfigurasi untuk mengatasi error upload gambar
+<IfModule mod_php5.c>
+php_value upload_max_filesize 100M
+php_value post_max_size 100M  
+php_value memory_limit 512M
+php_value max_execution_time 300
+php_value max_input_time 300
+php_flag display_errors Off
+php_flag log_errors Off
+php_value error_reporting 0
+</IfModule>
+
+<IfModule mod_php7.c>
+php_value upload_max_filesize 100M
+php_value post_max_size 100M
+php_value memory_limit 512M
+php_value max_execution_time 300
+php_value max_input_time 300
+php_flag display_errors Off
+php_flag log_errors Off
+php_value error_reporting 0
+</IfModule>
+
+<IfModule mod_php8.c>
+php_value upload_max_filesize 100M
+php_value post_max_size 100M
+php_value memory_limit 512M
+php_value max_execution_time 300
+php_value max_input_time 300
+php_flag display_errors Off
+php_flag log_errors Off
+php_value error_reporting 0
+</IfModule>
+
+# Security headers untuk upload
+<Files "*.jpg">
+    Header set Cache-Control "max-age=31536000, public"
+</Files>
+<Files "*.png">
+    Header set Cache-Control "max-age=31536000, public"
+</Files>
+<Files "*.gif">
+    Header set Cache-Control "max-age=31536000, public"
+</Files>
+
 # BEGIN WordPress
 # The directives (lines) between "BEGIN WordPress" and "END WordPress" are
 # dynamically generated, and should only be modified via WordPress filters.
