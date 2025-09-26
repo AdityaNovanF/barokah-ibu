@@ -1,0 +1,68 @@
+[26-Sep-2025 05:41:07 UTC] BAROKAH DEBUG: AJAX handler called with data: Array
+(
+    [action] => submit_contact_form
+    [nonce] => test123
+    [name] => Test
+    [phone] => 123456
+    [email] => test@test.com
+    [service] => test
+    [message] => test
+)
+
+[26-Sep-2025 05:41:07 UTC] BAROKAH DEBUG: Nonce verification failed
+[26-Sep-2025 05:43:02 UTC] TEST AJAX: Handler called successfully!
+[26-Sep-2025 05:45:13 UTC] BAROKAH DEBUG: AJAX handler called at 2025-09-26 05:45:13 with data: Array
+(
+    [action] => submit_contact_form
+    [name] => John
+    [phone] => 081234567890
+    [email] => john@example.com
+    [service] => Cetak
+    [message] => Hello test message
+)
+
+[26-Sep-2025 05:45:13 UTC] BAROKAH DEBUG: AJAX handler called at 2025-09-26 05:45:13 with data: Array
+(
+    [action] => submit_contact_form
+    [name] => John
+    [phone] => 081234567890
+    [email] => john@example.com
+    [service] => Cetak
+    [message] => Hello test message
+)
+
+[26-Sep-2025 05:45:13 UTC] BAROKAH DEBUG: Nonce verification passed
+[26-Sep-2025 05:45:13 UTC] BAROKAH DEBUG: Sanitized data - Name: John, Phone: 081234567890, Email: john@example.com
+[26-Sep-2025 05:45:13 UTC] BAROKAH DEBUG: All validation passed
+[26-Sep-2025 05:45:13 UTC] BAROKAH DEBUG: Inserting into database table: wp_contact_messages
+[26-Sep-2025 05:45:13 UTC] BAROKAH DEBUG: Database insert successful. Contact ID: 1
+[26-Sep-2025 05:45:15 UTC] BAROKAH DEBUG: Notifications sent, returning success response
+[26-Sep-2025 05:53:39 UTC] PHP Warning:  mysqli_real_connect(): (HY000/2002): No connection could be made because the target machine actively refused it in C:\xampp\htdocs\barokah-ibu\wp-includes\class-wpdb.php on line 1988
+[26-Sep-2025 06:07:58 UTC] BAROKAH DEBUG: AJAX handler called at 2025-09-26 06:07:58 with data: Array
+(
+    [action] => submit_contact_form
+    [nonce] => 55be98a4c8
+    [name] => aditya
+    [phone] => 6285215269015
+    [email] => adityanovanfirmansyah@gmail.com
+    [service] => Banner & Spanduk
+    [message] => kkkkkk
+)
+
+[26-Sep-2025 06:07:58 UTC] BAROKAH DEBUG: AJAX handler called at 2025-09-26 06:07:58 with data: Array
+(
+    [action] => submit_contact_form
+    [nonce] => 55be98a4c8
+    [name] => aditya
+    [phone] => 6285215269015
+    [email] => adityanovanfirmansyah@gmail.com
+    [service] => Banner & Spanduk
+    [message] => kkkkkk
+)
+
+[26-Sep-2025 06:07:58 UTC] BAROKAH DEBUG: Nonce verification passed
+[26-Sep-2025 06:07:58 UTC] BAROKAH DEBUG: Sanitized data - Name: aditya, Phone: 6285215269015, Email: adityanovanfirmansyah@gmail.com
+[26-Sep-2025 06:07:58 UTC] BAROKAH DEBUG: All validation passed
+[26-Sep-2025 06:07:58 UTC] BAROKAH DEBUG: Inserting into database table: wp_contact_messages
+[26-Sep-2025 06:07:58 UTC] BAROKAH DEBUG: Database insert successful. Contact ID: 2
+[26-Sep-2025 06:08:00 UTC] BAROKAH DEBUG: Notifications sent, returning success response

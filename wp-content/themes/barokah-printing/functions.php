@@ -697,266 +697,817 @@ function barokah_printing_add_featured_image_support() {
 }
 add_action('init', 'barokah_printing_add_featured_image_support');
 
-// Tambahan filter untuk menangani upload error dengan lebih baik
-add_filter('wp_handle_upload_prefilter', function($file) {
-    // Jika ada error sebelumnya, coba reset
-    if (isset($file['error']) && $file['error'] !== 0) {
-        // Reset error untuk format yang didukung
-        $allowed_types = array('jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'tiff', 'avif', 'heic');
-        $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-        
-        if (in_array(strtolower($file_extension), $allowed_types)) {
-            $file['error'] = 0;
-        }
-    }
+// COMPLETE PORTFOLIO AND UPLOAD SYSTEM FIX
+
+// Register Portfolio Post Type dengan proper setup
+function register_complete_portfolio_system() {
+    // Portfolio Post Type
+    register_post_type('portfolio', array(
+        'labels' => array(
+            'name' => 'Portfolio',
+            'singular_name' => 'Portfolio',
+            'add_new' => 'Tambah Portfolio',
+            'add_new_item' => 'Tambah Portfolio Baru',
+            'edit_item' => 'Edit Portfolio',
+            'new_item' => 'Portfolio Baru',
+            'view_item' => 'Lihat Portfolio',
+            'search_items' => 'Cari Portfolio',
+            'not_found' => 'Portfolio tidak ditemukan',
+            'not_found_in_trash' => 'Portfolio tidak ditemukan di trash'
+        ),
+        'public' => true,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'show_in_admin_bar' => true,
+        'show_in_nav_menus' => true,
+        'can_export' => true,
+        'has_archive' => true,
+        'exclude_from_search' => false,
+        'publicly_queryable' => true,
+        'capability_type' => 'post',
+        'show_in_rest' => true,
+        'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'),
+        'menu_icon' => 'dashicons-portfolio'
+    ));
+
+    // Portfolio Category Taxonomy
+    register_taxonomy('portfolio_category', 'portfolio', array(
+        'labels' => array(
+            'name' => 'Kategori Portfolio',
+            'singular_name' => 'Kategori Portfolio',
+            'search_items' => 'Cari Kategori',
+            'all_items' => 'Semua Kategori',
+            'parent_item' => 'Parent Kategori',
+            'parent_item_colon' => 'Parent Kategori:',
+            'edit_item' => 'Edit Kategori',
+            'update_item' => 'Update Kategori',
+            'add_new_item' => 'Tambah Kategori Baru',
+            'new_item_name' => 'Nama Kategori Baru',
+            'menu_name' => 'Kategori Portfolio'
+        ),
+        'hierarchical' => true,
+        'public' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'show_in_nav_menus' => true,
+        'show_tagcloud' => true,
+        'show_in_rest' => true,
+        'rewrite' => array('slug' => 'portfolio-category')
+    ));
     
-    return $file;
-});
-
-// Hook tambahan untuk memastikan semua fungsi aktif
-add_action('admin_init', function() {
-    enhanced_file_upload_handling();
-    increase_upload_limits();
-    barokah_printing_enhanced_image_support();
-});
-
-// EMERGENCY BYPASS: Completely override WordPress upload system
-add_action('wp_ajax_upload-attachment', function() {
-    // Intercept and handle upload manually
-    if (!empty($_FILES['async-upload'])) {
-        $file = $_FILES['async-upload'];
-        
-        if ($file['error'] === 0) {
-            // Manual upload without WordPress processing
-            $upload_dir = wp_upload_dir();
-            $filename = sanitize_file_name($file['name']);
-            $target_path = $upload_dir['path'] . '/' . $filename;
-            
-            if (move_uploaded_file($file['tmp_name'], $target_path)) {
-                // Create attachment post
-                $attachment_data = array(
-                    'post_mime_type' => $file['type'],
-                    'post_title' => sanitize_file_name(pathinfo($filename, PATHINFO_FILENAME)),
-                    'post_content' => '',
-                    'post_status' => 'inherit'
-                );
-                
-                $attachment_id = wp_insert_attachment($attachment_data, $target_path);
-                
-                if (!is_wp_error($attachment_id)) {
-                    // Simple metadata without processing
-                    $metadata = array(
-                        'file' => $filename,
-                        'width' => 0,
-                        'height' => 0,
-                        'sizes' => array()
-                    );
-                    
-                    wp_update_attachment_metadata($attachment_id, $metadata);
-                    
-                    // Return success response
-                    wp_send_json_success(array(
-                        'id' => $attachment_id,
-                        'url' => $upload_dir['url'] . '/' . $filename,
-                        'filename' => $filename
-                    ));
-                }
-            }
-        }
-        
-        wp_send_json_error('Upload failed');
-    }
-}, 1);
-
-// Nonaktifkan semua image processing hooks
-add_action('init', function() {
-    remove_all_filters('wp_generate_attachment_metadata');
-    remove_all_filters('wp_update_attachment_metadata'); 
-    remove_all_filters('image_resize_dimensions');
-    remove_all_filters('wp_image_resize_identical_dimensions');
-}, 999);
-
-// Custom upload handler yang membypass semua proses
-add_filter('wp_handle_upload', function($upload) {
-    if (isset($upload['error']) && !empty($upload['error'])) {
-        // Force success jika ada error
-        unset($upload['error']);
-    }
-    
-    // Pastikan upload dianggap berhasil
-    if (!isset($upload['url']) && isset($upload['file'])) {
-        $upload['url'] = wp_upload_dir()['url'] . '/' . basename($upload['file']);
-    }
-    
-    return $upload;
-}, 999);
-
-// Filter untuk bypass image processing errors
-add_filter('wp_image_resize_identical_dimensions', '__return_true');
-add_filter('wp_image_file_matches_image_meta', '__return_true');
-
-// Filter untuk mengatasi "Cannot generate responsive image sizes" - SUPER AGRESIF
-add_filter('wp_calculate_image_srcset_meta', '__return_false'); // Disable srcset completely
-add_filter('wp_calculate_image_sizes', '__return_false'); // Disable sizes attribute
-add_filter('wp_image_add_srcset_and_sizes', '__return_false'); // Disable responsive images
-
-// Force disable all image processing during upload
-add_filter('wp_handle_upload', function($upload) {
-    // Skip semua proses resize dan thumbnail generation
-    if (isset($upload['file']) && isset($upload['type']) && strpos($upload['type'], 'image/') === 0) {
-        // Tandai bahwa ini tidak perlu diproses lebih lanjut
-        $upload['skip_processing'] = true;
-    }
-    return $upload;
-});
-
-// Bypass error message tentang responsive images
-add_filter('wp_handle_upload_prefilter', function($file) {
-    // Reset semua error yang berkaitan dengan image processing
-    if (isset($file['error'])) {
-        $file['error'] = 0; // Force no error
-    }
-    
-    // Bypass file type checking untuk image
-    if (isset($file['type']) && strpos($file['type'], 'image/') === 0) {
-        $file['error'] = 0;
-    }
-    
-    return $file;
-});
-
-// Disable image editor untuk mencegah processing error
-add_filter('wp_image_editors', function($editors) {
-    return array(); // Return empty array to disable all editors
-});
-
-// ULTIMATE FIX - Paksa upload berhasil tanpa error apapun
-add_action('wp_ajax_upload-attachment', function() {
-    // Override error handling
-    set_error_handler(function($errno, $errstr, $errfile, $errline) {
-        // Ignore semua error saat upload
-        return true;
-    });
-}, 1);
-
-add_filter('upload_mimes', function($mimes) {
-    // Tambah support untuk semua format dan override apapun
-    $custom_mimes = array(
-        'jpg|jpeg|jpe' => 'image/jpeg',
-        'gif' => 'image/gif', 
-        'png' => 'image/png',
-        'bmp' => 'image/bmp',
-        'tiff|tif' => 'image/tiff',
-        'webp' => 'image/webp',
-        'ico' => 'image/x-icon',
-        'svg' => 'image/svg+xml',
-        'svgz' => 'image/svg+xml',
-        'avif' => 'image/avif',
-        'heic' => 'image/heic',
-        'heif' => 'image/heif'
+    // Create default categories
+    $default_categories = array(
+        'Banner' => 'Banner dan spanduk percetakan',
+        'Brosur' => 'Brosur dan flyer',
+        'Packaging' => 'Kemasan dan packaging',
+        'Kartu Nama' => 'Kartu nama dan kartu bisnis',
+        'Stiker' => 'Stiker dan label'
     );
     
-    // Override semua existing mimes
-    return array_merge($mimes, $custom_mimes);
-}, 999);
+    foreach ($default_categories as $cat_name => $cat_desc) {
+        if (!term_exists($cat_name, 'portfolio_category')) {
+            wp_insert_term($cat_name, 'portfolio_category', array(
+                'description' => $cat_desc,
+                'slug' => sanitize_title($cat_name)
+            ));
+        }
+    }
+}
+add_action('init', 'register_complete_portfolio_system');
 
-// Bypass WordPress image validation completely
-add_filter('getimagesize_mimes_to_exts', function($mime_to_ext) {
-    return array(
-        'image/jpeg' => 'jpg',
-        'image/png' => 'png', 
-        'image/gif' => 'gif',
-        'image/webp' => 'webp',
-        'image/bmp' => 'bmp',
-        'image/tiff' => 'tiff',
-        'image/svg+xml' => 'svg',
-        'image/avif' => 'avif',
-        'image/heic' => 'heic',
-        'image/heif' => 'heif'
-    );
-});
-
-// Load JavaScript fix untuk admin upload
-function load_admin_upload_fix() {
-    wp_enqueue_script('jquery');
-    wp_enqueue_script(
-        'admin-upload-fix',
-        get_template_directory_uri() . '/admin-upload-fix.js',
-        array('jquery'),
-        '1.0.0',
-        true
+// Enhanced meta box for portfolio
+function enhanced_portfolio_meta_boxes() {
+    add_meta_box(
+        'portfolio_enhanced_images',
+        'Portfolio Images & External URL',
+        'enhanced_portfolio_images_callback',
+        'portfolio',
+        'normal',
+        'high'
     );
 }
-add_action('admin_enqueue_scripts', 'load_admin_upload_fix');
+add_action('add_meta_boxes', 'enhanced_portfolio_meta_boxes');
 
-// SIMPLE BUT EFFECTIVE: Suppress all upload errors
-add_filter('wp_handle_upload_prefilter', function($file) {
-    // Always return success
-    $file['error'] = 0;
-    return $file;
-}, 999);
-
-// Suppress PHP errors during upload
-add_action('wp_ajax_upload-attachment', function() {
-    @ini_set('display_errors', 0);
-    @error_reporting(0);
-}, 1);
-
-// Override error messages in upload response
-add_filter('wp_ajax_upload-attachment', function() {
-    ob_start();
-}, 1);
-
-add_action('wp_ajax_upload-attachment', function() {
-    $output = ob_get_clean();
+function enhanced_portfolio_images_callback($post) {
+    wp_nonce_field('portfolio_enhanced_meta', 'portfolio_enhanced_nonce');
+    $external_url = get_post_meta($post->ID, 'external_image_url', true);
     
-    // Check if there's an error message and replace it
-    if (strpos($output, 'responsive image sizes') !== false || 
-        strpos($output, 'Convert it to JPEG or PNG') !== false) {
-        
-        // Create fake success response
-        wp_send_json_success(array(
-            'id' => time(),
-            'url' => wp_upload_dir()['url'] . '/placeholder.jpg',
-            'filename' => 'uploaded-image.jpg'
-        ));
+    echo '<table class="form-table">';
+    echo '<tr>';
+    echo '<th><label for="external_image_url">🔗 External Image URL:</label></th>';
+    echo '<td>';
+    echo '<input type="url" id="external_image_url" name="external_image_url" value="' . esc_attr($external_url) . '" style="width: 100%;" placeholder="https://example.com/image.jpg" />';
+    echo '<p class="description"><strong>� SOLUSI UPLOAD ERROR:</strong><br>';
+    echo '<span style="color: red;">Jika Featured Image tidak bisa diupload (error responsive image)</span><br>';
+    echo '<strong>➡️ Gunakan External Image URL ini sebagai alternatif</strong><br>';
+    echo '📋 Copy URL gambar dari Google Images, Unsplash, atau hosting lain<br>';
+    echo '🖼️ Contoh: https://via.placeholder.com/1200x800 atau https://picsum.photos/1200/800</p>';
+    echo '<div style="background: #e7f3ff; padding: 10px; margin: 10px 0; border-left: 4px solid #0073aa;">';
+    echo '<strong>🚀 Quick Images:</strong><br>';
+    echo '<button type="button" onclick="document.getElementById(\'external_image_url\').value=\'https://via.placeholder.com/1200x800/3B82F6/FFFFFF?text=Portfolio+Image\'" style="margin: 2px; padding: 5px 10px;">Placeholder Blue</button>';
+    echo '<button type="button" onclick="document.getElementById(\'external_image_url\').value=\'https://picsum.photos/1200/800\'" style="margin: 2px; padding: 5px 10px;">Random Image</button>';
+    echo '<button type="button" onclick="document.getElementById(\'external_image_url\').value=\'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=1200&h=800&fit=crop\'" style="margin: 2px; padding: 5px 10px;">Design Sample</button>';
+    echo '</div>';
+    echo '</td>';
+    echo '</tr>';
+    echo '</table>';
+}
+
+function save_enhanced_portfolio_meta($post_id) {
+    if (!isset($_POST['portfolio_enhanced_nonce']) || !wp_verify_nonce($_POST['portfolio_enhanced_nonce'], 'portfolio_enhanced_meta')) {
+        return;
     }
     
-    echo $output;
-}, 999);
-
-// Remove default WordPress image processing to prevent errors
-remove_action('wp_generate_attachment_metadata', 'wp_generate_attachment_metadata');
-remove_filter('wp_image_resize_identical_dimensions', 'wp_image_resize_identical_dimensions');
-
-// Custom simple metadata generator that doesn't process images
-add_filter('wp_generate_attachment_metadata', function($metadata, $attachment_id, $context) {
-    $file = get_attached_file($attachment_id);
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    if (!current_user_can('edit_post', $post_id)) return;
     
-    if ($file && file_exists($file)) {
-        // Return minimal metadata without processing
-        $info = @getimagesize($file);
+    if (isset($_POST['external_image_url'])) {
+        update_post_meta($post_id, 'external_image_url', esc_url_raw($_POST['external_image_url']));
+    }
+}
+add_action('save_post', 'save_enhanced_portfolio_meta');
+
+// Force thumbnail support
+add_post_type_support('portfolio', 'thumbnail');
+
+// ========================================
+// CONTACT FORM SYSTEM
+// ========================================
+
+// Debug helper function
+function barokah_debug($message) {
+    // Write to WordPress debug.log if available
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('BAROKAH DEBUG: ' . $message);
+    }
+    
+    // Also store in WordPress option for easy checking
+    $debug_logs = get_option('barokah_debug_logs', array());
+    $debug_logs[] = array(
+        'time' => current_time('mysql'),
+        'message' => $message
+    );
+    
+    // Keep only last 10 entries
+    $debug_logs = array_slice($debug_logs, -10);
+    update_option('barokah_debug_logs', $debug_logs);
+}
+
+// Create Contact Messages Table
+function create_contact_messages_table() {
+    global $wpdb;
+    
+    $table_name = $wpdb->prefix . 'contact_messages';
+    
+    $charset_collate = $wpdb->get_charset_collate();
+    
+    $sql = "CREATE TABLE $table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        name tinytext NOT NULL,
+        email varchar(100) NOT NULL,
+        phone varchar(20) NOT NULL,
+        service varchar(100) DEFAULT '',
+        message text NOT NULL,
+        status varchar(20) DEFAULT 'unread',
+        created_at datetime DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id)
+    ) $charset_collate;";
+    
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+    
+    // Add version option
+    add_option('contact_messages_db_version', '1.0');
+}
+
+// Create table on theme activation
+add_action('after_switch_theme', 'create_contact_messages_table');
+
+// Force create table function (can be called manually)
+add_action('wp_ajax_create_contact_table', 'create_contact_messages_table');
+add_action('wp_ajax_nopriv_create_contact_table', 'create_contact_messages_table');
+
+// Add admin menu for contact messages
+function add_contact_messages_admin_menu() {
+    add_menu_page(
+        'Pesan Kontak',
+        'Pesan Kontak',
+        'manage_options',
+        'contact-messages',
+        'display_contact_messages_page',
+        'dashicons-email-alt',
+        25
+    );
+}
+add_action('admin_menu', 'add_contact_messages_admin_menu');
+
+// AJAX Handler for Contact Form
+function handle_contact_form_ajax() {
+    // Debug logging - force create debug log
+    $debug_msg = 'BAROKAH DEBUG: AJAX handler called at ' . date('Y-m-d H:i:s') . ' with data: ' . print_r($_POST, true);
+    error_log($debug_msg);
+    file_put_contents(WP_CONTENT_DIR . '/debug.log', '[' . date('d-M-Y H:i:s') . ' UTC] ' . $debug_msg . "\n", FILE_APPEND);
+    
+    // Verify nonce for security
+    if (!wp_verify_nonce($_POST['nonce'], 'contact_form_nonce')) {
+        error_log('BAROKAH DEBUG: Nonce verification failed');
+        wp_die(json_encode(array(
+            'success' => false,
+            'message' => 'Security check failed!'
+        )));
+    }
+    
+    error_log('BAROKAH DEBUG: Nonce verification passed');
+    
+    // Sanitize input data
+    $name = sanitize_text_field($_POST['name']);
+    $phone = sanitize_text_field($_POST['phone']);
+    $email = sanitize_email($_POST['email']);
+    $service = sanitize_text_field($_POST['service']);
+    $message = sanitize_textarea_field($_POST['message']);
+    
+    error_log('BAROKAH DEBUG: Sanitized data - Name: ' . $name . ', Phone: ' . $phone . ', Email: ' . $email);
+    
+    // Validate required fields
+    if (empty($name) || empty($phone) || empty($email) || empty($message)) {
+        error_log('BAROKAH DEBUG: Validation failed - empty fields');
+        wp_die(json_encode(array(
+            'success' => false,
+            'message' => 'Mohon lengkapi semua field yang wajib diisi!'
+        )));
+    }
+    
+    // Validate email
+    if (!is_email($email)) {
+        error_log('BAROKAH DEBUG: Invalid email format');
+        wp_die(json_encode(array(
+            'success' => false,
+            'message' => 'Format email tidak valid!'
+        )));
+    }
+    
+    error_log('BAROKAH DEBUG: All validation passed');
+    
+    // Insert into database
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'contact_messages';
+    
+    // Check if table exists, create if not
+    if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+        error_log('BAROKAH DEBUG: Creating contact messages table');
+        create_contact_messages_table();
+    }
+    
+    error_log('BAROKAH DEBUG: Inserting into database table: ' . $table_name);
+    
+    $result = $wpdb->insert(
+        $table_name,
+        array(
+            'name' => $name,
+            'email' => $email,
+            'phone' => $phone,
+            'service' => $service,
+            'message' => $message,
+            'status' => 'unread',
+            'created_at' => current_time('mysql')
+        ),
+        array('%s', '%s', '%s', '%s', '%s', '%s', '%s')
+    );
+    
+    if ($result !== false) {
+        $contact_id = $wpdb->insert_id;
+        error_log('BAROKAH DEBUG: Database insert successful. Contact ID: ' . $contact_id);
         
-        return array(
-            'file' => basename($file),
-            'width' => $info ? $info[0] : 0,
-            'height' => $info ? $info[1] : 0,
-            'sizes' => array() // No additional sizes to prevent processing
+        // Send email notification
+        send_contact_email_notification($name, $phone, $email, $service, $message);
+        
+        // Send WhatsApp notification
+        send_whatsapp_notification($name, $phone, $email, $service, $message);
+        
+        error_log('BAROKAH DEBUG: Notifications sent, returning success response');
+        
+        wp_die(json_encode(array(
+            'success' => true,
+            'message' => '✅ Pesan berhasil dikirim! Kami akan segera menghubungi Anda.',
+            'contact_id' => $contact_id
+        )));
+    } else {
+        error_log('BAROKAH DEBUG: Database insert failed. Error: ' . $wpdb->last_error);
+        wp_die(json_encode(array(
+            'success' => false,
+            'message' => '❌ Terjadi kesalahan saat menyimpan pesan. Silakan coba lagi.'
+        )));
+    }
+}
+
+// Register AJAX handlers
+add_action('wp_ajax_submit_contact_form', 'handle_contact_form_ajax');
+add_action('wp_ajax_nopriv_submit_contact_form', 'handle_contact_form_ajax');
+
+// Add simple test AJAX handler
+function test_ajax_handler() {
+    file_put_contents(WP_CONTENT_DIR . '/debug.log', '[' . date('d-M-Y H:i:s') . ' UTC] TEST AJAX: Handler called successfully!' . "\n", FILE_APPEND);
+    wp_die(json_encode(array('success' => true, 'message' => 'Test AJAX works!')));
+}
+add_action('wp_ajax_test_ajax', 'test_ajax_handler');
+add_action('wp_ajax_nopriv_test_ajax', 'test_ajax_handler');
+
+// Send Email Notification
+function send_contact_email_notification($name, $phone, $email, $service, $message) {
+    $to = 'aditcarlytos61199@gmail.com';
+    $subject = '[BAROKAH IBU] Pesan Baru dari Website - ' . $name;
+    
+    $email_message = "
+    <html>
+    <head>
+        <title>Pesan Baru dari Website Barokah Ibu</title>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .header { background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; padding: 20px; text-align: center; }
+            .content { padding: 20px; background: #f8f9fa; }
+            .info-box { background: white; border-left: 4px solid #2563eb; padding: 15px; margin: 10px 0; }
+            .message-box { background: white; border: 1px solid #dee2e6; padding: 15px; border-radius: 5px; margin: 15px 0; }
+            .footer { background: #6c757d; color: white; padding: 15px; text-align: center; font-size: 12px; }
+        </style>
+    </head>
+    <body>
+        <div class='header'>
+            <h1>🎯 Pesan Baru dari Website!</h1>
+            <p>Ada customer yang mengirim pesan melalui website Barokah Ibu</p>
+        </div>
+        
+        <div class='content'>
+            <div class='info-box'>
+                <h3>📋 Detail Customer:</h3>
+                <p><strong>Nama:</strong> {$name}</p>
+                <p><strong>Telepon:</strong> <a href='tel:{$phone}'>{$phone}</a></p>
+                <p><strong>Email:</strong> <a href='mailto:{$email}'>{$email}</a></p>
+                <p><strong>Layanan:</strong> " . (!empty($service) ? $service : 'Tidak dipilih') . "</p>
+            </div>
+            
+            <div class='message-box'>
+                <h3>💬 Pesan Customer:</h3>
+                <p>{$message}</p>
+            </div>
+            
+            <div style='text-align: center; margin: 20px 0;'>
+                <a href='https://wa.me/{$phone}' style='background: #25D366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;'>
+                    💬 Balas via WhatsApp
+                </a>
+                <a href='mailto:{$email}' style='background: #0066cc; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-left: 10px;'>
+                    📧 Balas via Email
+                </a>
+            </div>
+        </div>
+        
+        <div class='footer'>
+            <p>Dikirim pada: " . date('d F Y, H:i:s') . " WIB | Website: barokahibu.com</p>
+        </div>
+    </body>
+    </html>
+    ";
+    
+    $headers = array(
+        'Content-Type: text/html; charset=UTF-8',
+        'From: Website Barokah Ibu <noreply@barokahibu.com>',
+        'Reply-To: ' . $email
+    );
+    
+    wp_mail($to, $subject, $email_message, $headers);
+}
+
+// Send WhatsApp Notification (using WhatsApp API or webhook)
+function send_whatsapp_notification($name, $phone, $email, $service, $message) {
+    $whatsapp_number = '6285215269015';
+    
+    $wa_message = "🎯 *PESAN BARU WEBSITE BAROKAH IBU*\n\n";
+    $wa_message .= "📋 *Detail Customer:*\n";
+    $wa_message .= "👤 Nama: {$name}\n";
+    $wa_message .= "📞 Telepon: {$phone}\n";
+    $wa_message .= "📧 Email: {$email}\n";
+    $wa_message .= "🛍️ Layanan: " . (!empty($service) ? $service : 'Tidak dipilih') . "\n\n";
+    $wa_message .= "💬 *Pesan:*\n{$message}\n\n";
+    $wa_message .= "⏰ Waktu: " . date('d F Y, H:i:s') . " WIB\n\n";
+    $wa_message .= "Segera hubungi customer ya! 👍";
+    
+    // Method 1: Direct WhatsApp Web Link (Simple approach)
+    // This will open WhatsApp web with pre-filled message
+    $wa_link = "https://wa.me/{$whatsapp_number}?text=" . urlencode($wa_message);
+    
+    // Optional: Use cURL to send to WhatsApp API service (if you have one)
+    // You can integrate with services like:
+    // - WhatsApp Business API
+    // - Twilio WhatsApp API  
+    // - Fonnte, Wablas, or similar services
+    
+    // For now, we'll store the notification in WordPress option for manual checking
+    $notifications = get_option('pending_whatsapp_notifications', array());
+    $notifications[] = array(
+        'message' => $wa_message,
+        'link' => $wa_link,
+        'timestamp' => current_time('mysql'),
+        'customer' => $name
+    );
+    update_option('pending_whatsapp_notifications', $notifications);
+    
+    // Optional: Auto-redirect admin to WhatsApp (uncomment if needed)
+    // if (current_user_can('manage_options')) {
+    //     add_action('wp_footer', function() use ($wa_link) {
+    //         echo "<script>setTimeout(() => window.open('{$wa_link}', '_blank'), 2000);</script>";
+    //     });
+    // }
+}
+
+// Add admin notice for WhatsApp notifications
+function show_whatsapp_notifications_admin_notice() {
+    if (!current_user_can('manage_options')) return;
+    
+    $notifications = get_option('pending_whatsapp_notifications', array());
+    if (!empty($notifications)) {
+        $count = count($notifications);
+        echo "<div class='notice notice-info is-dismissible'>";
+        echo "<p><strong>📱 WhatsApp Notifications ({$count}):</strong> ";
+        echo "<a href='#' onclick='showWANotifications()' class='button'>Lihat Pesan</a> ";
+        echo "<a href='#' onclick='clearWANotifications()' class='button'>Hapus Semua</a></p>";
+        echo "</div>";
+        
+        echo "<script>
+        function showWANotifications() {
+            let notifications = " . json_encode($notifications) . ";
+            let html = '<div style=\"max-height: 400px; overflow-y: auto;\">';
+            notifications.forEach((notif, index) => {
+                html += '<div style=\"border: 1px solid #ddd; margin: 10px 0; padding: 10px;\">';
+                html += '<p><strong>Customer: ' + notif.customer + '</strong></p>';
+                html += '<p style=\"font-size: 12px; color: #666;\">' + notif.timestamp + '</p>';
+                html += '<textarea readonly style=\"width: 100%; height: 100px;\">' + notif.message + '</textarea>';
+                html += '<p><a href=\"' + notif.link + '\" target=\"_blank\" class=\"button button-primary\">Buka WhatsApp</a></p>';
+                html += '</div>';
+            });
+            html += '</div>';
+            
+            let popup = window.open('', 'WANotifications', 'width=600,height=500,scrollbars=yes');
+            popup.document.write('<html><head><title>WhatsApp Notifications</title></head><body>' + html + '</body></html>');
+        }
+        
+        function clearWANotifications() {
+            if (confirm('Hapus semua notifikasi WhatsApp?')) {
+                fetch('" . admin_url('admin-ajax.php') . "', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    body: 'action=clear_wa_notifications&nonce=" . wp_create_nonce('clear_wa_nonce') . "'
+                }).then(() => location.reload());
+            }
+        }
+        </script>";
+    }
+}
+add_action('admin_notices', 'show_whatsapp_notifications_admin_notice');
+
+// AJAX handler to clear WhatsApp notifications
+function clear_wa_notifications_ajax() {
+    if (wp_verify_nonce($_POST['nonce'], 'clear_wa_nonce') && current_user_can('manage_options')) {
+        update_option('pending_whatsapp_notifications', array());
+        wp_die('success');
+    }
+    wp_die('error');
+}
+add_action('wp_ajax_clear_wa_notifications', 'clear_wa_notifications_ajax');
+
+// Display admin page for contact messages
+function display_contact_messages_page() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'contact_messages';
+    
+    // Handle status update
+    if (isset($_GET['action']) && isset($_GET['id'])) {
+        $id = intval($_GET['id']);
+        if ($_GET['action'] == 'mark_read') {
+            $wpdb->update($table_name, array('status' => 'read'), array('id' => $id));
+            echo '<div class="notice notice-success"><p>Pesan ditandai sudah dibaca.</p></div>';
+        } elseif ($_GET['action'] == 'delete') {
+            $wpdb->delete($table_name, array('id' => $id));
+            echo '<div class="notice notice-success"><p>Pesan berhasil dihapus.</p></div>';
+        }
+    }
+    
+    // Get all messages
+    $messages = $wpdb->get_results("SELECT * FROM $table_name ORDER BY created_at DESC");
+    
+    echo '<div class="wrap">';
+    echo '<h1>Pesan Kontak</h1>';
+    
+    if (empty($messages)) {
+        echo '<p>Belum ada pesan masuk.</p>';
+    } else {
+        echo '<table class="wp-list-table widefat fixed striped">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>Nama</th>';
+        echo '<th>Email</th>';
+        echo '<th>Telepon</th>';
+        echo '<th>Layanan</th>';
+        echo '<th>Pesan</th>';
+        echo '<th>Status</th>';
+        echo '<th>Tanggal</th>';
+        echo '<th>Aksi</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+        
+        foreach ($messages as $msg) {
+            $status_badge = $msg->status == 'read' ? '<span style="color: green;">✅ Dibaca</span>' : '<span style="color: orange; font-weight: bold;">🔔 Baru</span>';
+            
+            echo '<tr>';
+            echo '<td><strong>' . esc_html($msg->name) . '</strong></td>';
+            echo '<td><a href="mailto:' . esc_attr($msg->email) . '">' . esc_html($msg->email) . '</a></td>';
+            echo '<td><a href="tel:' . esc_attr($msg->phone) . '">' . esc_html($msg->phone) . '</a></td>';
+            echo '<td>' . esc_html($msg->service ?: 'Tidak dipilih') . '</td>';
+            echo '<td>' . esc_html(wp_trim_words($msg->message, 10)) . '</td>';
+            echo '<td>' . $status_badge . '</td>';
+            echo '<td>' . esc_html($msg->created_at) . '</td>';
+            echo '<td>';
+            
+            if ($msg->status != 'read') {
+                echo '<a href="?page=contact-messages&action=mark_read&id=' . $msg->id . '" class="button button-small">Tandai Dibaca</a> ';
+            }
+            
+            $wa_message = "Halo {$msg->name}, terima kasih sudah menghubungi Barokah Ibu Printing! 😊\n\nKami sudah menerima pesan Anda tentang " . ($msg->service ?: 'layanan percetakan') . ".\n\nTim kami akan segera membantu Anda. Ada yang bisa kami bantu lebih lanjut?";
+            $clean_phone = str_replace(['+', '-', ' ', '(', ')'], '', $msg->phone);
+            
+            echo '<a href="https://wa.me/' . esc_attr($clean_phone) . '?text=' . urlencode($wa_message) . '" target="_blank" class="button button-primary button-small" style="background: #25D366; border-color: #25D366;">💬 WhatsApp</a> ';
+            echo '<a href="?page=contact-messages&action=delete&id=' . $msg->id . '" class="button button-small" onclick="return confirm(\'Yakin hapus pesan ini?\')">Hapus</a>';
+            echo '</td>';
+            echo '</tr>';
+            
+            // Show full message if clicked
+            echo '<tr class="message-detail" style="display: none;" id="detail-' . $msg->id . '">';
+            echo '<td colspan="8">';
+            echo '<div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; margin: 10px 0;">';
+            echo '<h4>Pesan Lengkap:</h4>';
+            echo '<p>' . nl2br(esc_html($msg->message)) . '</p>';
+            echo '</div>';
+            echo '</td>';
+            echo '</tr>';
+        }
+        
+        echo '</tbody>';
+        echo '</table>';
+        
+        // Add JavaScript for expandable rows
+        echo '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll("tbody tr:not(.message-detail)").forEach(function(row) {
+                row.style.cursor = "pointer";
+                row.addEventListener("click", function(e) {
+                    if (e.target.tagName === "A" || e.target.tagName === "BUTTON") return;
+                    
+                    const id = this.querySelector("a[href*=mark_read]")?.href.match(/id=(\d+)/)?.[1];
+                    if (id) {
+                        const detailRow = document.getElementById("detail-" + id);
+                        if (detailRow) {
+                            detailRow.style.display = detailRow.style.display === "none" ? "table-row" : "none";
+                        }
+                    }
+                });
+            });
+        });
+        </script>';
+        
+        echo '<style>
+        tbody tr:not(.message-detail):hover {
+            background-color: #f0f8ff;
+        }
+        .message-detail td {
+            background-color: #f9f9f9 !important;
+        }
+        </style>';
+    }
+    
+    echo '</div>';
+}
+
+// Add debug page to admin menu
+function add_debug_menu() {
+    if (current_user_can('manage_options')) {
+        add_submenu_page(
+            'edit.php?post_type=contact_messages',
+            'Debug Logs',
+            'Debug Logs',
+            'manage_options',
+            'barokah-debug',
+            'show_debug_page'
         );
     }
-    
-    return $metadata;
-}, 10, 3);
+}
+add_action('admin_menu', 'add_debug_menu');
 
-// Filter untuk handle SVG upload dengan aman
-add_filter('wp_check_filetype_and_ext', function($data, $file, $filename, $mimes) {
-    $filetype = wp_check_filetype($filename, $mimes);
-    return [
-        'ext'             => $filetype['ext'],
-        'type'            => $filetype['type'],
-        'proper_filename' => $data['proper_filename']
-    ];
-}, 10, 4);
+// Show debug page
+function show_debug_page() {
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+    
+    if (isset($_POST['clear_debug'])) {
+        delete_option('barokah_debug_logs');
+        echo '<div class="notice notice-success"><p>Debug logs cleared!</p></div>';
+    }
+    
+    $debug_logs = get_option('barokah_debug_logs', array());
+    
+    echo '<div class="wrap">';
+    echo '<h1>Barokah Ibu - Debug Logs</h1>';
+    
+    if (empty($debug_logs)) {
+        echo '<p>No debug logs yet. Try submitting a contact form.</p>';
+    } else {
+        echo '<form method="post"><button type="submit" name="clear_debug" class="button">Clear Logs</button></form><br>';
+        echo '<table class="wp-list-table widefat fixed striped">';
+        echo '<thead><tr><th>Time</th><th>Message</th></tr></thead>';
+        echo '<tbody>';
+        
+        foreach (array_reverse($debug_logs) as $log) {
+            echo '<tr>';
+            echo '<td>' . esc_html($log['time']) . '</td>';
+            echo '<td><pre>' . esc_html($log['message']) . '</pre></td>';
+            echo '</tr>';
+        }
+        
+        echo '</tbody></table>';
+    }
+    echo '</div>';
+}
+
+// Add contact messages to admin menu counter
+function add_contact_messages_bubble() {
+    global $menu;
+    
+    $unread_count = get_posts(array(
+        'post_type' => 'contact_messages',
+        'posts_per_page' => -1,
+        'meta_query' => array(
+            array(
+                'key' => 'is_read',
+                'value' => '0',
+                'compare' => '='
+            )
+        ),
+        'fields' => 'ids'
+    ));
+    
+    $count = count($unread_count);
+    if ($count > 0) {
+        foreach ($menu as $key => $value) {
+            if ($menu[$key][2] == 'edit.php?post_type=contact_messages') {
+                $menu[$key][0] .= ' <span class="awaiting-mod">' . $count . '</span>';
+                break;
+            }
+        }
+    }
+}
+add_action('admin_menu', 'add_contact_messages_bubble');
+
+// Mark message as read when viewed
+function mark_contact_message_as_read($post_id) {
+    if (get_post_type($post_id) == 'contact_messages' && is_admin()) {
+        update_post_meta($post_id, 'is_read', 1);
+    }
+}
+add_action('edit_post', 'mark_contact_message_as_read');
+
+// Customize contact messages admin columns
+function contact_messages_admin_columns($columns) {
+    $columns = array(
+        'cb' => $columns['cb'],
+        'title' => 'Pesan',
+        'sender_info' => 'Info Pengirim',
+        'service' => 'Layanan',
+        'status' => 'Status',
+        'date' => 'Tanggal'
+    );
+    return $columns;
+}
+add_filter('manage_contact_messages_posts_columns', 'contact_messages_admin_columns');
+
+// Populate custom columns
+function contact_messages_admin_column_content($column, $post_id) {
+    switch ($column) {
+        case 'sender_info':
+            $name = get_post_meta($post_id, 'sender_name', true);
+            $phone = get_post_meta($post_id, 'sender_phone', true);
+            $email = get_post_meta($post_id, 'sender_email', true);
+            
+            echo "<strong>{$name}</strong><br>";
+            echo "📞 <a href='tel:{$phone}'>{$phone}</a><br>";
+            echo "📧 <a href='mailto:{$email}'>{$email}</a>";
+            break;
+            
+        case 'service':
+            $service = get_post_meta($post_id, 'sender_service', true);
+            echo !empty($service) ? esc_html($service) : '<em>Tidak dipilih</em>';
+            break;
+            
+        case 'status':
+            $is_read = get_post_meta($post_id, 'is_read', true);
+            if ($is_read == '1') {
+                echo '<span style="color: green;">✅ Sudah dibaca</span>';
+            } else {
+                echo '<span style="color: orange; font-weight: bold;">🔔 Belum dibaca</span>';
+            }
+            break;
+    }
+}
+add_action('manage_contact_messages_posts_custom_column', 'contact_messages_admin_column_content', 10, 2);
+
+// Make columns sortable
+function contact_messages_sortable_columns($columns) {
+    $columns['sender_info'] = 'sender_name';
+    $columns['service'] = 'sender_service';
+    $columns['status'] = 'is_read';
+    return $columns;
+}
+add_filter('manage_edit-contact_messages_sortable_columns', 'contact_messages_sortable_columns');
+
+// Add meta boxes to contact messages
+function add_contact_message_meta_boxes() {
+    add_meta_box(
+        'contact_message_details',
+        'Detail Pesan Kontak',
+        'contact_message_details_callback',
+        'contact_messages',
+        'normal',
+        'high'
+    );
+    
+    add_meta_box(
+        'contact_message_actions',
+        'Tindakan Cepat',
+        'contact_message_actions_callback',
+        'contact_messages',
+        'side',
+        'high'
+    );
+}
+add_action('add_meta_boxes', 'add_contact_message_meta_boxes');
+
+// Meta box callback for message details
+function contact_message_details_callback($post) {
+    $name = get_post_meta($post->ID, 'sender_name', true);
+    $phone = get_post_meta($post->ID, 'sender_phone', true);
+    $email = get_post_meta($post->ID, 'sender_email', true);
+    $service = get_post_meta($post->ID, 'sender_service', true);
+    $message = get_post_meta($post->ID, 'sender_message', true);
+    $submission_time = get_post_meta($post->ID, 'submission_time', true);
+    
+    echo '<div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px;">';
+    echo '<h3 style="margin-top: 0; color: #2563eb;">📋 Informasi Pengirim</h3>';
+    echo '<table class="form-table">';
+    echo '<tr><th>Nama:</th><td><strong>' . esc_html($name) . '</strong></td></tr>';
+    echo '<tr><th>Telepon:</th><td><a href="tel:' . esc_attr($phone) . '">' . esc_html($phone) . '</a></td></tr>';
+    echo '<tr><th>Email:</th><td><a href="mailto:' . esc_attr($email) . '">' . esc_html($email) . '</a></td></tr>';
+    echo '<tr><th>Layanan:</th><td>' . (!empty($service) ? esc_html($service) : '<em>Tidak dipilih</em>') . '</td></tr>';
+    echo '<tr><th>Waktu:</th><td>' . esc_html($submission_time) . ' WIB</td></tr>';
+    echo '</table>';
+    
+    echo '<h3 style="color: #2563eb;">💬 Pesan Customer</h3>';
+    echo '<div style="background: white; border: 1px solid #ccc; border-radius: 4px; padding: 15px; min-height: 100px;">';
+    echo '<p>' . nl2br(esc_html($message)) . '</p>';
+    echo '</div>';
+    echo '</div>';
+}
+
+// Meta box callback for quick actions
+function contact_message_actions_callback($post) {
+    $phone = get_post_meta($post->ID, 'sender_phone', true);
+    $email = get_post_meta($post->ID, 'sender_email', true);
+    $name = get_post_meta($post->ID, 'sender_name', true);
+    $service = get_post_meta($post->ID, 'sender_service', true);
+    
+    $wa_message = "Halo {$name}, terima kasih sudah menghubungi Barokah Ibu Printing! 😊\n\nKami sudah menerima pesan Anda tentang " . (!empty($service) ? $service : 'layanan percetakan') . ".\n\nTim kami akan segera membantu Anda. Ada yang bisa kami bantu lebih lanjut?";
+    
+    echo '<div style="text-align: center;">';
+    echo '<div style="margin-bottom: 15px;">';
+    echo '<a href="https://wa.me/' . esc_attr(str_replace(['+', '-', ' '], '', $phone)) . '?text=' . urlencode($wa_message) . '" target="_blank" class="button button-primary" style="width: 100%; margin-bottom: 10px; background: #25D366; border-color: #25D366;">';
+    echo '💬 Balas via WhatsApp</a>';
+    echo '</div>';
+    
+    echo '<div style="margin-bottom: 15px;">';
+    echo '<a href="mailto:' . esc_attr($email) . '?subject=Re: Layanan Percetakan - Barokah Ibu&body=Halo ' . esc_attr($name) . ',%0D%0A%0D%0ATerima kasih sudah menghubungi Barokah Ibu Printing!%0D%0A%0D%0ASalam,%0D%0ATeam Barokah Ibu" target="_blank" class="button button-secondary" style="width: 100%;">';
+    echo '📧 Balas via Email</a>';
+    echo '</div>';
+    
+    echo '<div style="margin-bottom: 15px;">';
+    echo '<a href="tel:' . esc_attr($phone) . '" class="button button-secondary" style="width: 100%;">';
+    echo '📞 Telepon Sekarang</a>';
+    echo '</div>';
+    
+    $is_read = get_post_meta($post->ID, 'is_read', true);
+    if ($is_read != '1') {
+        echo '<div style="margin-top: 20px; padding: 10px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px;">';
+        echo '<small>💡 <strong>Tips:</strong> Pesan ini akan otomatis ditandai sebagai "sudah dibaca" setelah Anda menyimpan/mengupdate post ini.</small>';
+        echo '</div>';
+    }
+    echo '</div>';
+}
 
 // Opsi: Sembunyikan admin bar untuk non-admin (optional)
 // Uncomment baris berikut jika ingin menyembunyikan admin bar untuk semua user kecuali admin

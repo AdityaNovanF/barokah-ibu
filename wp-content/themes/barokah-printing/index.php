@@ -859,13 +859,14 @@
                         }
                     }
             ?>
-                    <div class="portfolio-item<?php echo esc_attr($category_classes); ?> group relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
-                         onclick="openPortfolioModal(<?php echo $post_id; ?>)">
-                        <?php 
+                    <?php 
                         // Get thumbnail URL with enhanced fallback system
                         $thumbnail_url = '';
                         $image_source = 'placeholder';
                         $post_id = get_the_ID();
+                    ?>
+                    <div class="portfolio-item<?php echo esc_attr($category_classes); ?> group relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+                         onclick="openPortfolioModal(<?php echo $post_id; ?>)"><?php
                         $post_title = get_the_title();
                         
                         // Priority 1: WordPress Featured Image (multiple size attempts)
@@ -1191,6 +1192,11 @@
                                 const dateEl = document.getElementById('modalDate');
                                 
                                 if (titleEl) titleEl.textContent = portfolio.title;
+                                
+                                // Update header title
+                                const headerTitleEl = document.getElementById('modalHeaderTitle');
+                                if (headerTitleEl) headerTitleEl.textContent = portfolio.title;
+                                
                                 if (imageEl) {
                                     // Use first available image from images array
                                     const imageSrc = portfolio.images && portfolio.images.length > 0 ? portfolio.images[0] : portfolio.image;
@@ -1202,10 +1208,10 @@
                                 }
                                 if (dateEl) dateEl.textContent = portfolio.date;
                                 
-                                // Set category
+                                // Set category badge on image
                                 const categoryContainer = document.getElementById('modalCategory');
                                 if (categoryContainer && portfolio.category) {
-                                    const colorClass = portfolio.color === 'green' ? 'bg-green-600' : (portfolio.color === 'yellow' ? 'bg-yellow-500' : 'bg-blue-600');
+                                    const colorClass = portfolio.color === 'green' ? 'bg-green-600' : (portfolio.color === 'yellow' ? 'bg-yellow-500' : (portfolio.color === 'purple' ? 'bg-purple-600' : 'bg-blue-600'));
                                     categoryContainer.innerHTML = '<span class="' + colorClass + ' text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">' + portfolio.category + '</span>';
                                 }
                                 
@@ -1248,21 +1254,172 @@
                     }, 500);
                 });
             </script>
+
+            <!-- All Portfolio Modal Functions -->
+            <script>
+                // Global variable for all portfolio data
+                window.allPortfolioData = [];
+
+                // Function to get all portfolio data
+                function getAllPortfolioData() {
+                    if (window.allPortfolioData.length === 0 && window.portfolioData) {
+                        // Convert portfolioData object to array
+                        window.allPortfolioData = Object.values(window.portfolioData);
+                    }
+                    return window.allPortfolioData;
+                }
+
+                // Function to open all portfolio modal
+                function openAllPortfolioModal() {
+                    const modal = document.getElementById('allPortfolioModal');
+                    if (!modal) return;
+                    
+                    // Load portfolio data
+                    const portfolioData = getAllPortfolioData();
+                    renderAllPortfolio(portfolioData);
+                    
+                    // Show modal
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+
+                // Function to close all portfolio modal
+                function closeAllPortfolioModal() {
+                    const modal = document.getElementById('allPortfolioModal');
+                    if (!modal) return;
+                    
+                    modal.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
+
+                // Function to filter portfolio in all portfolio modal
+                function filterAllPortfolio(category) {
+                    const portfolioData = getAllPortfolioData();
+                    let filteredData = portfolioData;
+                    
+                    if (category !== 'all') {
+                        filteredData = portfolioData.filter(function(item) {
+                            return item.category && item.category.toLowerCase().includes(category.toLowerCase());
+                        });
+                    }
+                    
+                    renderAllPortfolio(filteredData);
+                    
+                    // Update active filter button
+                    const filterButtons = document.querySelectorAll('.all-portfolio-filter-btn');
+                    filterButtons.forEach(function(btn) {
+                        btn.classList.remove('active', 'bg-blue-600', 'text-white');
+                        btn.classList.add('bg-gray-200', 'text-gray-700');
+                        
+                        if (btn.getAttribute('data-filter') === category) {
+                            btn.classList.add('active', 'bg-blue-600', 'text-white');
+                            btn.classList.remove('bg-gray-200', 'text-gray-700');
+                        }
+                    });
+                }
+
+                // Function to render portfolio items in modal
+                function renderAllPortfolio(portfolioData) {
+                    const gridContainer = document.getElementById('allPortfolioGrid');
+                    if (!gridContainer) return;
+                    
+                    if (portfolioData.length === 0) {
+                        gridContainer.innerHTML = '<div class="col-span-full text-center py-8 text-gray-500">Tidak ada portfolio ditemukan</div>';
+                        return;
+                    }
+                    
+                    let html = '';
+                    portfolioData.forEach(function(portfolio) {
+                        const colorClass = portfolio.color === 'green' ? 'bg-green-600' : 
+                                         (portfolio.color === 'yellow' ? 'bg-yellow-500' : 
+                                         (portfolio.color === 'purple' ? 'bg-purple-600' : 'bg-blue-600'));
+                        
+                        const imageSrc = portfolio.featured_image || portfolio.image || 'https://via.placeholder.com/400x300/E5E7EB/9CA3AF?text=No+Image';
+                        
+                        html += '<div class="bg-white rounded-lg shadow-md overflow-hidden portfolio-grid-item cursor-pointer" onclick="openPortfolioFromModal(' + portfolio.id + ')">';
+                        html += '  <div class="relative h-48 overflow-hidden">';
+                        html += '    <img src="' + imageSrc + '" alt="' + portfolio.title + '" class="w-full h-full object-cover">';
+                        html += '    <div class="absolute top-3 right-3">';
+                        html += '      <span class="' + colorClass + ' text-white px-2 py-1 rounded-full text-xs font-medium">' + portfolio.category + '</span>';
+                        html += '    </div>';
+                        html += '  </div>';
+                        html += '  <div class="p-4">';
+                        html += '    <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">' + portfolio.title + '</h3>';
+                        html += '    <p class="text-gray-600 text-sm mb-3 line-clamp-3">' + (portfolio.excerpt || 'Lihat detail portfolio ini...') + '</p>';
+                        html += '    <div class="flex justify-between items-center">';
+                        html += '      <span class="text-xs text-gray-500">' + portfolio.date + '</span>';
+                        html += '      <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Lihat Detail →</button>';
+                        html += '    </div>';
+                        html += '  </div>';
+                        html += '</div>';
+                    });
+                    
+                    gridContainer.innerHTML = html;
+                }
+
+                // Function to open specific portfolio modal from all portfolio modal
+                function openPortfolioFromModal(portfolioId) {
+                    // Close all portfolio modal first
+                    closeAllPortfolioModal();
+                    
+                    // Small delay then open specific portfolio modal
+                    setTimeout(function() {
+                        if (typeof window.openPortfolioModal === 'function') {
+                            window.openPortfolioModal(portfolioId);
+                        }
+                    }, 100);
+                }
+
+                // Close modals when clicking outside or pressing Escape
+                document.addEventListener('DOMContentLoaded', function() {
+                    // All portfolio modal
+                    const allPortfolioModal = document.getElementById('allPortfolioModal');
+                    if (allPortfolioModal) {
+                        allPortfolioModal.addEventListener('click', function(e) {
+                            if (e.target === this) {
+                                closeAllPortfolioModal();
+                            }
+                        });
+                    }
+                    
+                    // Detail portfolio modal
+                    const portfolioModal = document.getElementById('portfolioModal');
+                    if (portfolioModal) {
+                        portfolioModal.addEventListener('click', function(e) {
+                            if (e.target === this) {
+                                closePortfolioModal();
+                            }
+                        });
+                    }
+                    
+                    // ESC key to close modals
+                    document.addEventListener('keydown', function(e) {
+                        if (e.key === 'Escape') {
+                            const allPortfolioModal = document.getElementById('allPortfolioModal');
+                            const portfolioModal = document.getElementById('portfolioModal');
+                            
+                            if (allPortfolioModal && allPortfolioModal.style.display === 'flex') {
+                                closeAllPortfolioModal();
+                            } else if (portfolioModal && portfolioModal.style.display === 'flex') {
+                                closePortfolioModal();
+                            }
+                        }
+                    });
+                });
+            </script>
         </div>
 
-        <?php if ($portfolio_query->max_num_pages > 1) : ?>
         <!-- Portfolio Navigation -->
         <div class="mt-12 flex justify-center gap-4">
-            <?php if ($portfolio_query->found_posts > 6) : ?>
-                <a href="<?php echo get_post_type_archive_link('portfolio'); ?>" class="inline-flex items-center justify-center bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition duration-300">
+            <?php if ($portfolio_query->found_posts > 0) : ?>
+                <button onclick="openAllPortfolioModal()" class="inline-flex items-center justify-center bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition duration-300 transform hover:scale-105">
                     Lihat Semua Portfolio
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                     </svg>
-                </a>
+                </button>
             <?php endif; ?>
         </div>
-        <?php endif; ?>
         
 
         </div>
@@ -1270,49 +1427,107 @@
 </section>
 
 <!-- Portfolio Detail Modal -->
-<div id="portfolioModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden items-center justify-center p-4 pt-20">
-    <div id="modalContent" class="bg-white rounded-2xl max-w-3xl w-full max-h-[80vh] overflow-hidden shadow-2xl transform scale-95 opacity-0 transition-all duration-300">
-        <!-- Close Button -->
-        <button onclick="closePortfolioModal()" class="absolute top-4 right-4 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-3 rounded-full transition-all duration-200 z-10 w-12 h-12 flex items-center justify-center">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </button>
+<div id="portfolioModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden items-center justify-center p-4 pt-24">
+    <div id="modalContent" class="bg-white rounded-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden shadow-2xl transform scale-95 opacity-0 transition-all duration-300 relative">
+        <!-- Header Modal -->
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="text-2xl mr-3">🎯</span>
+                <h2 id="modalHeaderTitle" class="text-2xl font-bold">Detail Portfolio</h2>
+            </div>
+            <button onclick="closePortfolioModal()" class="hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
         
         <!-- Modal Body -->
-        <div class="overflow-y-auto max-h-[80vh]">
-
+        <div class="overflow-y-auto max-h-[55vh] modal-scroll">
+            
             <!-- Content -->
-            <div class="px-6 pb-6">
-                <!-- Title and Category - Centered -->
-                <div class="text-center mb-6">
-                    <h3 id="modalTitle" class="text-2xl font-bold text-gray-900 mb-2"></h3>
-                    <div id="modalCategory"></div>
+            <div class="px-6 py-6">
+                <!-- Title - Left Aligned -->
+                <div class="mb-6">
+                    <h3 id="modalTitle" class="text-2xl font-bold text-gray-900 mb-3"></h3>
                 </div>
                 
-                <!-- Description - Left Aligned -->
-                <div id="modalContentText" class="text-gray-700 leading-relaxed text-base mb-6 text-left"></div>
+                <!-- Description -->
+                <div id="modalContentText" class="text-gray-700 leading-relaxed text-base mb-6"></div>
                 
                 <!-- Meta Information -->
-                <div class="mt-6 pt-6 border-t border-gray-200 text-center space-y-3">
-                    <div id="modalCategoryMeta" class="text-sm text-gray-600">
-                        <strong>Kategori:</strong> <span id="modalCategoryName" class="text-gray-700"></span>
+                <div class="border-t border-gray-200 pt-4 space-y-3">
+                    <div id="modalCategoryMeta" class="text-sm text-gray-600 flex items-center gap-2">
+                        <span class="font-semibold">Kategori:</span> 
+                        <span id="modalCategoryName" class="text-gray-700"></span>
                     </div>
-                    <div class="text-sm text-gray-500">
-                        <strong>Tanggal:</strong> <span id="modalDate"></span>
+                    <div class="text-sm text-gray-500 flex items-center gap-2">
+                        <span class="font-semibold">Tanggal:</span> 
+                        <span id="modalDate"></span>
                     </div>
                 </div>
                 
-                <!-- Action Buttons -->
-                <div class="mt-6 flex justify-center gap-3">
-                    <button onclick="closePortfolioModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 hover:-translate-y-0.5 shadow-lg">
-                        Tutup
-                    </button>
-                    <a id="modalContactBtn" href="#kontak" onclick="closePortfolioModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 hover:-translate-y-0.5 shadow-lg no-underline inline-block">
-                        Hubungi Kami
-                    </a>
-                </div>
             </div>
+        </div>
+        
+        <!-- Footer Modal -->
+        <div class="bg-gray-50 p-4 flex justify-center gap-3">
+            <button onclick="closePortfolioModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-300">
+                Tutup
+            </button>
+            <a id="modalContactBtn" href="#kontak" onclick="closePortfolioModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 no-underline inline-block">
+                Hubungi Kami
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Semua Portfolio -->
+<div id="allPortfolioModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden items-center justify-center p-4 pt-24">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[85vh] overflow-hidden relative">
+        <!-- Header Modal -->
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 flex justify-between items-center">
+            <h2 class="text-2xl font-bold">📂 Semua Portfolio Barokah Ibu</h2>
+            <button onclick="closeAllPortfolioModal()" class="hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Filter Categories (dalam modal) -->
+        <div class="p-4 bg-gray-50 border-b">
+            <div class="flex flex-wrap gap-2 justify-center">
+                <button onclick="filterAllPortfolio('all')" class="all-portfolio-filter-btn active bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-blue-700 transition duration-300" data-filter="all">
+                    Semua
+                </button>
+                <?php
+                $modal_categories = get_terms(array(
+                    'taxonomy' => 'portfolio_category',
+                    'hide_empty' => false,
+                ));
+                if ($modal_categories && !is_wp_error($modal_categories)) :
+                    foreach ($modal_categories as $modal_category) : ?>
+                        <button onclick="filterAllPortfolio('<?php echo esc_js($modal_category->slug); ?>')" class="all-portfolio-filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm font-semibold hover:bg-gray-300 transition duration-300" data-filter="<?php echo esc_attr($modal_category->slug); ?>">
+                            <?php echo esc_html($modal_category->name); ?>
+                        </button>
+                    <?php endforeach;
+                endif; ?>
+            </div>
+        </div>
+
+        <!-- Content Modal -->
+        <div class="overflow-y-auto max-h-[55vh] modal-scroll">
+            <div id="allPortfolioGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
+                <!-- Portfolio items akan diisi via JavaScript -->
+            </div>
+        </div>
+
+        <!-- Footer Modal -->
+        <div class="bg-gray-50 p-4 flex justify-center gap-3">
+            <button onclick="closeAllPortfolioModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-300">
+                Tutup
+            </button>
         </div>
     </div>
 </div>
@@ -1551,61 +1766,64 @@
             <div class="bg-white text-gray-800 p-8 rounded-lg shadow-2xl">
                 <h3 class="text-2xl font-semibold mb-6">Kirim Pesan</h3>
                 
-                <form class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium mb-2">Nama Lengkap *</label>
-                            <input type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <form id="contactForm" class="space-y-6">
+                    <input type="hidden" id="contact_nonce" value="<?php echo wp_create_nonce('contact_form_nonce'); ?>">
+                    <script>console.log('BAROKAH DEBUG: Generated nonce:', '<?php echo wp_create_nonce('contact_form_nonce'); ?>');</script>
+                    
+                    <!-- Row 1: Nama dan Telepon -->
+                    <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap *</label>
+                            <input type="text" id="contact_name" name="contact_name" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors">
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium mb-2">No. Telepon *</label>
-                            <input type="tel" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">No. Telepon *</label>
+                            <input type="tel" id="contact_phone" name="contact_phone" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors">
                         </div>
                     </div>
                     
+                    <!-- Row 2: Email -->
                     <div>
-                        <label class="block text-sm font-medium mb-2">Email *</label>
-                        <input type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                        <input type="email" id="contact_email" name="contact_email" required 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors">
                     </div>
                     
+                    <!-- Row 3: Layanan -->
                     <div>
-                        <label class="block text-sm font-medium mb-2">Layanan yang Diinginkan</label>
-                        <select id="serviceSelect" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <option value="" disabled selected>Pilih Layanan</option>
-                            <option value="kalender-a3">Kalender A3+</option>
-                            <option value="ganci">Ganci Custom</option>
-                            <option value="kipas">Kipas Custom</option>
-                            <option value="nametag">Nametag / Namadada</option>
-                            <option value="mug-custom">Mug Custom</option>
-                            <option value="nota-kupon">Nota & Kupon</option>
-                            <option value="stempel-wisuda">Stempel Wisuda</option>
-                            <option value="kupon">Kupon</option>
-                            <option value="cetak-a3">Cetak A3</option>
-                            <option value="brosur">Brosur</option>
-                            <option value="dtf-baju">DTF Baju</option>
-                            <option value="kalender-custom">Kalender Custom</option>
-                            <option value="mug-costum">Mug Costum</option>
-                            <option value="nota-kupon-undian">Nota dan Kupon Undian</option>
-                            <option value="stempel-biasa">Stempel Biasa dan Flash</option>
-                            <option value="yasin-cover">Yasin + Cover</option>
-                            <option value="yasin-kosongan">Yasin Kosongan</option>
-                            <option value="undangan-nikah">Undangan Pernikahan</option>
-                            <option value="banner">Banner & Spanduk</option>
-                            <option value="kartu-nama">Kartu Nama</option>
-                            <option value="stiker">Stiker & Label</option>
-                            <option value="packaging">Packaging & Box</option>
-                            <option value="lainnya">Lainnya</option>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Layanan yang Diinginkan</label>
+                        <select id="contact_service" name="contact_service" 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors bg-white">
+                            <option value="">Pilih Layanan</option>
+                            <option value="Banner & Spanduk">Banner & Spanduk</option>
+                            <option value="Brosur">Brosur</option>
+                            <option value="Kartu Nama">Kartu Nama</option>
+                            <option value="Stiker & Label">Stiker & Label</option>
+                            <option value="Undangan Pernikahan">Undangan Pernikahan</option>
+                            <option value="Kalender Custom">Kalender Custom</option>
+                            <option value="Mug Custom">Mug Custom</option>
+                            <option value="DTF Baju">DTF Baju</option>
+                            <option value="Stempel">Stempel</option>
+                            <option value="Packaging & Box">Packaging & Box</option>
+                            <option value="Lainnya">Lainnya</option>
                         </select>
                     </div>
                     
+                    <!-- Row 4: Pesan -->
                     <div>
-                        <label class="block text-sm font-medium mb-2">Pesan *</label>
-                        <textarea required rows="4" placeholder="Ceritakan detail kebutuhan percetakan Anda..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Pesan *</label>
+                        <textarea id="contact_message" name="contact_message" required rows="4" 
+                                  placeholder="Ceritakan detail kebutuhan percetakan Anda..." 
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors resize-vertical"></textarea>
                     </div>
                     
-                    <button type="submit" class="w-full bg-blue-700 text-white hover:bg-blue-800 px-6 py-4 rounded-lg font-semibold text-lg transition duration-300">
-                        <i class="fas fa-paper-plane mr-2"></i>
-                        Kirim Pesan
+                    <!-- Submit Button -->
+                    <button type="submit" id="submit_contact" 
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-300 flex items-center justify-center space-x-2">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Kirim Pesan</span>
                     </button>
                 </form>
             </div>
@@ -1715,13 +1933,147 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Contact form submission
-    const contactForm = document.querySelector('#kontak form');
+    // Contact form AJAX submission
+    console.log('BAROKAH DEBUG: Looking for contactForm...');
+    const contactForm = document.querySelector('#contactForm');
+    console.log('BAROKAH DEBUG: contactForm found:', contactForm);
     if (contactForm) {
+        console.log('BAROKAH DEBUG: Adding submit event listener');
         contactForm.addEventListener('submit', function(e) {
+            console.log('BAROKAH DEBUG: Form submitted!');
             e.preventDefault();
-            alert('Terima kasih! Pesan Anda telah dikirim. Kami akan segera menghubungi Anda.');
+            
+            const submitBtn = this.querySelector('#submit_contact');
+            const originalText = submitBtn.innerHTML;
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim...';
+            
+            // Validate form
+            const requiredFields = this.querySelectorAll('input[required], textarea[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    field.classList.remove('border-red-500');
+                    field.classList.add('border-green-500');
+                }
+            });
+            
+            if (!isValid) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                showFormMessage('❌ Mohon lengkapi semua field yang wajib diisi!', 'error');
+                return;
+            }
+            
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('action', 'submit_contact_form');
+            formData.append('nonce', document.getElementById('contact_nonce').value);
+            formData.append('name', document.getElementById('contact_name').value);
+            formData.append('phone', document.getElementById('contact_phone').value);
+            formData.append('email', document.getElementById('contact_email').value);
+            formData.append('service', document.getElementById('contact_service').value);
+            formData.append('message', document.getElementById('contact_message').value);
+            
+            // Debug: Log form data
+            console.log('BAROKAH DEBUG: Submitting form with data:');
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+            
+            // Submit via AJAX
+            fetch('<?php echo admin_url('admin-ajax.php'); ?>', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                console.log('BAROKAH DEBUG: Response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('BAROKAH DEBUG: Response data:', data);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                
+                if (data.success) {
+                    showFormMessage(data.message, 'success');
+                    contactForm.reset();
+                    // Remove validation classes
+                    requiredFields.forEach(field => {
+                        field.classList.remove('border-red-500', 'border-green-500');
+                    });
+                } else {
+                    showFormMessage(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                showFormMessage('❌ Terjadi kesalahan jaringan. Silakan coba lagi.', 'error');
+            });
         });
+        
+        // Real-time validation
+        const inputs = contactForm.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.hasAttribute('required')) {
+                    if (this.value.trim()) {
+                        this.classList.remove('border-red-500');
+                        this.classList.add('border-green-500');
+                    } else {
+                        this.classList.add('border-red-500');
+                        this.classList.remove('border-green-500');
+                    }
+                }
+            });
+            
+            // Remove validation styles on focus
+            input.addEventListener('focus', function() {
+                this.classList.remove('border-red-500', 'border-green-500');
+            });
+        });
+    }
+    
+    // Show form messages
+    function showFormMessage(message, type = 'success') {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `fixed top-24 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm ${
+            type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+        }`;
+        messageDiv.innerHTML = `
+            <div class="flex items-center justify-between">
+                <span>${message}</span>
+                <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-white hover:text-gray-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(messageDiv);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            if (messageDiv.parentNode) {
+                messageDiv.remove();
+            }
+        }, 5000);
+        
+        // Slide in animation
+        setTimeout(() => {
+            messageDiv.style.transform = 'translateX(0)';
+        }, 100);
+        messageDiv.style.transform = 'translateX(100%)';
+        messageDiv.style.transition = 'transform 0.3s ease-out';
     }
 });
 </script>
