@@ -88,532 +88,805 @@
             </p>
         </div>
         
-        <!-- Services Carousel -->
+        <!-- Services Horizontal Scroll -->
         <div class="relative">
-            <!-- Carousel Navigation Buttons -->
-            <button id="servicesCarouselPrev" class="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white hover:bg-gray-50 shadow-lg rounded-full p-3 text-gray-600 hover:text-blue-700 transition duration-300">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-            </button>
-            <button id="servicesCarouselNext" class="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white hover:bg-gray-50 shadow-lg rounded-full p-3 text-gray-600 hover:text-blue-700 transition duration-300">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-            </button>
-            
-            <!-- Carousel Container -->
-            <div class="overflow-hidden mx-8">
-                <div id="servicesCarouselTrack" class="flex transition-transform duration-500 ease-in-out">
-                    <!-- Slide 1 -->
-                    <div class="flex-none w-full grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <!-- Service Item 1 - Kalender A3+ -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-blue-700 from-blue-50 to-blue-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-blue-100 group-hover:border-blue-300">
-                                    <i class="fas fa-calendar-alt text-5xl text-blue-700 group-hover:text-blue-800 transition-colors duration-300"></i>
+            <!-- Scroll Container -->
+            <div id="servicesScrollContainer" class="overflow-x-auto scrollbar-hide" style="scrollbar-width: none; -ms-overflow-style: none;">
+                <div id="servicesScrollTrack" class="flex gap-8 pb-4 items-stretch" style="width: max-content; min-height: 600px;">
+                    <!-- Service Card 1 - Cetak A3+ -->
+                    <div class="group relative bg-gradient-to-br from-white to-blue-50 backdrop-blur-sm border border-blue-200/30 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full flex-none" style="width: 350px;">
+                            <!-- Decorative elements -->
+                            <div class="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-yellow-400/20 to-blue-500/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-700"></div>
+                            <div class="absolute -top-2 -left-2 w-16 h-16 bg-gradient-to-br from-blue-500/20 to-yellow-400/20 rounded-full blur-lg group-hover:rotate-45 transition-all duration-500"></div>
+                            
+                            <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 flex items-center justify-center h-52">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services/Cetak A3+.jpg" alt="Cetak A3+" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700 filter group-hover:brightness-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 via-transparent to-transparent group-hover:from-blue-900/30 transition-all duration-500"></div>
+                                <div class="absolute top-3 left-3 bg-yellow-500 text-blue-900 px-3 py-1 rounded-full text-xs font-black shadow-lg">
+                                    🎯 BEST QUALITY
                                 </div>
-                                <!-- <div class="absolute top-4 right-4 bg-blue-700 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                                    Populer
-                                </div> -->
                             </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Kalender A3+</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Kalender custom ukuran A3+ dengan desain menarik dan kualitas cetak terbaik.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-blue-700">Rp 6.000</span>
-                                    <button onclick="goToContactForm('kalender-a3')" class="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition duration-300">
-                                        Pesan
+                            
+                            <div class="p-6 flex flex-col flex-grow relative z-10">
+                                <h3 class="text-xl font-bold mb-3 text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Cetak A3+</h3>
+                                <p class="text-gray-600 flex-grow leading-relaxed text-sm mb-6">Kualitas cetak premium di berbagai bahan. Ide besar Anda, kami wujudkan!</p>
+                                
+                                <div class="flex flex-col gap-4 mt-auto">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Mulai dari</span>
+                                            <span class="text-2xl font-black text-blue-700">Rp 20.000</span>
+                                        </div>
+                                        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full p-3 group-hover:scale-110 transition-all duration-300 shadow-lg">
+                                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button onclick="goToContactForm('cetak-a3')" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2">
+                                        <span>Pesan Sekarang</span>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Service Item 2 - Ganci -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-yellow-400 from-yellow-50 to-yellow-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:-rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-yellow-100 group-hover:border-yellow-300">
-                                    <i class="fas fa-key text-5xl text-yellow-500 group-hover:text-yellow-600 transition-colors duration-300"></i>
+                    
+                    <!-- Service Card 2 - Cetak Brosur -->
+                    <div class="group relative bg-gradient-to-br from-white to-yellow-50 backdrop-blur-sm border border-yellow-200/30 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-yellow-500/10 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full flex-none" style="width: 350px;">
+                            <!-- Decorative elements -->
+                            <div class="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-blue-400/20 to-yellow-500/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-700"></div>
+                            <div class="absolute -top-2 -left-2 w-16 h-16 bg-gradient-to-br from-yellow-500/20 to-blue-400/20 rounded-full blur-lg group-hover:rotate-45 transition-all duration-500"></div>
+                            
+                            <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 flex items-center justify-center h-52">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services/Cetak Brosur.jpg" alt="Cetak Brosur" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700 filter group-hover:brightness-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 via-transparent to-transparent group-hover:from-blue-900/30 transition-all duration-500"></div>
+                                <div class="absolute top-3 left-3 bg-yellow-500 text-blue-900 px-3 py-1 rounded-full text-xs font-black shadow-lg">
+                                    📈 MARKETING
                                 </div>
                             </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Ganci Custom</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Ganci kunci custom dengan desain sesuai kebutuhan, bahan berkualitas dan tahan lama.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-yellow-500">Rp 10.000</span>
-                                    <button onclick="goToContactForm('ganci')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
-                                        Pesan
+                            
+                            <div class="p-6 flex flex-col flex-grow relative z-10">
+                                <h3 class="text-xl font-bold mb-3 text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Cetak Brosur</h3>
+                                <p class="text-gray-600 mb-6 flex-grow leading-relaxed text-sm">Promosi efektif, harga hemat. Cetak Brosur untuk menjangkau lebih banyak pelanggan!</p>
+                                
+                                <div class="flex flex-col gap-4">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Mulai dari</span>
+                                            <span class="text-2xl font-black text-blue-700">Rp 7.000</span>
+                                        </div>
+                                        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full p-3 group-hover:scale-110 transition-all duration-300 shadow-lg">
+                                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button onclick="goToContactForm('cetak-brosur')" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2">
+                                        <span>Pesan Sekarang</span>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Service Item 3 - Kipas Custom -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-blue-700 from-blue-50 to-blue-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-blue-100 group-hover:border-blue-300">
-                                    <i class="fas fa-wind text-5xl text-blue-700 group-hover:text-blue-800 transition-colors duration-300"></i>
+                    
+                    <!-- Service Card 3 - Cetak DTF -->
+                    <div class="group relative bg-gradient-to-br from-white to-blue-50 backdrop-blur-sm border border-blue-200/30 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full flex-none" style="width: 350px;">
+                            <!-- Decorative elements -->
+                            <div class="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-yellow-400/20 to-blue-500/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-700"></div>
+                            <div class="absolute -top-2 -left-2 w-16 h-16 bg-gradient-to-br from-blue-500/20 to-yellow-400/20 rounded-full blur-lg group-hover:rotate-45 transition-all duration-500"></div>
+                            
+                            <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 flex items-center justify-center h-52">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services/Cetak DTF.jpg" alt="Cetak DTF" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700 filter group-hover:brightness-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 via-transparent to-transparent group-hover:from-blue-900/30 transition-all duration-500"></div>
+                                <div class="absolute top-3 left-3 bg-yellow-500 text-blue-900 px-3 py-1 rounded-full text-xs font-black shadow-lg">
+                                    🔥 HOT TREND
                                 </div>
                             </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Kipas Custom</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Kipas custom dengan desain unik, cocok untuk souvenir atau promosi.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-blue-700">Rp 7.000</span>
-                                    <button onclick="goToContactForm('kipas')" class="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition duration-300">
-                                        Pesan
+                            
+                            <div class="p-6 flex flex-col flex-grow relative z-10">
+                                <h3 class="text-xl font-bold mb-3 text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Cetak DTF</h3>
+                                <p class="text-gray-600 mb-6 flex-grow leading-relaxed text-sm">Sablon kaos modern. Hasil kuat, detail, anti pecah. Tingkatkan apparel Anda!</p>
+                                
+                                <div class="flex flex-col gap-4">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Harga per meter</span>
+                                            <span class="text-2xl font-black text-blue-700">Rp 50.000</span>
+                                        </div>
+                                        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full p-3 group-hover:scale-110 transition-all duration-300 shadow-lg">
+                                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button onclick="goToContactForm('cetak-dtf')" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2">
+                                        <span>Pesan Sekarang</span>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Slide 2 -->
-                    <div class="flex-none w-full grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <!-- Service Item 4 - Nametag -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-yellow-400 from-yellow-50 to-yellow-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:-rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-yellow-100 group-hover:border-yellow-300">
-                                    <i class="fas fa-id-badge text-5xl text-yellow-500 group-hover:text-yellow-600 transition-colors duration-300"></i>
+                    
+                    <!-- Service Card 4 - Cetak ID Card -->
+                    <div class="group relative bg-gradient-to-br from-white to-blue-50 backdrop-blur-sm border border-blue-200/30 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full flex-none" style="width: 350px;">
+                            <!-- Decorative elements -->
+                            <div class="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-yellow-400/20 to-blue-500/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-700"></div>
+                            <div class="absolute -top-2 -left-2 w-16 h-16 bg-gradient-to-br from-blue-500/20 to-yellow-400/20 rounded-full blur-lg group-hover:rotate-45 transition-all duration-500"></div>
+                            
+                            <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 flex items-center justify-center h-52">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services/Cetak ID Card.jpg" alt="Cetak ID Card" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700 filter group-hover:brightness-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 via-transparent to-transparent group-hover:from-blue-900/30 transition-all duration-500"></div>
+                                <div class="absolute top-3 left-3 bg-yellow-500 text-blue-900 px-3 py-1 rounded-full text-xs font-black shadow-lg">
+                                    ⭐ TERLARIS
                                 </div>
                             </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Nametag / Namadada</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Nametag profesional untuk kantor, event, atau identitas personal.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-yellow-500">Rp 25.000</span>
-                                    <button onclick="goToContactForm('nametag')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
-                                        Pesan
+                            
+                            <div class="p-6 flex flex-col flex-grow relative z-10">
+                                <h3 class="text-xl font-bold mb-3 text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Cetak ID Card</h3>
+                                <p class="text-gray-600 mb-6 flex-grow leading-relaxed text-sm">Tampil profesional. Cetak ID Card berkualitas, langsung siap pakai!</p>
+                                
+                                <div class="flex flex-col gap-4">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Mulai dari</span>
+                                            <span class="text-2xl font-black text-blue-700">Rp 15.000</span>
+                                        </div>
+                                        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full p-3 group-hover:scale-110 transition-all duration-300 shadow-lg">
+                                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button onclick="goToContactForm('cetak-id-card')" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2">
+                                        <span>Pesan Sekarang</span>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Service Item 5 - Mug Custom -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-blue-700 from-blue-50 to-blue-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-blue-100 group-hover:border-blue-300">
-                                    <i class="fas fa-mug-hot text-5xl text-blue-700 group-hover:text-blue-800 transition-colors duration-300"></i>
+                    
+                    <!-- Service Card 5 - Cetak Kalender -->
+                    <div class="group relative bg-gradient-to-br from-white to-yellow-50 backdrop-blur-sm border border-yellow-200/30 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-yellow-500/10 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full flex-none" style="width: 350px;">
+                            <!-- Decorative elements -->
+                            <div class="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-blue-400/20 to-yellow-500/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-700"></div>
+                            <div class="absolute -top-2 -left-2 w-16 h-16 bg-gradient-to-br from-yellow-500/20 to-blue-400/20 rounded-full blur-lg group-hover:rotate-45 transition-all duration-500"></div>
+                            
+                            <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 flex items-center justify-center h-52">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services/Cetak Kalender.jpg" alt="Cetak Kalender" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700 filter group-hover:brightness-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 via-transparent to-transparent group-hover:from-blue-900/30 transition-all duration-500"></div>
+                                <div class="absolute top-3 left-3 bg-yellow-500 text-blue-900 px-3 py-1 rounded-full text-xs font-black shadow-lg">
+                                    � CUSTOM
                                 </div>
                             </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Mug Custom</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Mug custom dengan desain personal, cocok untuk hadiah atau merchandise.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-blue-700">Rp 25.000</span>
-                                    <button onclick="goToContactForm('mug-custom')" class="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition duration-300">
-                                        Pesan
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Service Item 6 - Nota dan Kupon -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-yellow-400 from-yellow-50 to-yellow-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:-rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-yellow-100 group-hover:border-yellow-300">
-                                    <i class="fas fa-receipt text-5xl text-yellow-500 group-hover:text-yellow-600 transition-colors duration-300"></i>
-                                </div>
-                            </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Nota & Kupon</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Nota dan kupon berkualitas untuk kebutuhan bisnis Anda.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-yellow-500">Rp 150.000</span>
-                                    <button onclick="goToContactForm('nota-kupon')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
-                                        Pesan
+                            
+                            <div class="p-6 flex flex-col flex-grow relative z-10">
+                                <h3 class="text-xl font-bold mb-3 text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Cetak Kalender</h3>
+                                <p class="text-gray-600 mb-6 flex-grow leading-relaxed text-sm">Branding 365 hari! Cetak Kalender Custom untuk promosi atau hadiah.</p>
+                                
+                                <div class="flex flex-col gap-4">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Mulai dari</span>
+                                            <span class="text-2xl font-black text-blue-700">Rp 6.000</span>
+                                        </div>
+                                        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full p-3 group-hover:scale-110 transition-all duration-300 shadow-lg">
+                                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button onclick="goToContactForm('cetak-kalender')" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2">
+                                        <span>Pesan Sekarang</span>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Slide 3 -->
-                    <div class="flex-none w-full grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <!-- Service Item 7 - Stempel Wisuda -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-blue-700 from-blue-50 to-blue-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-blue-100 group-hover:border-blue-300">
-                                    <i class="fas fa-graduation-cap text-5xl text-blue-700 group-hover:text-blue-700 transition-colors duration-300"></i>
+                    
+                    <!-- Service Card 6 - PIN Ganci & Tag -->
+                    <div class="group relative bg-gradient-to-br from-white to-blue-50 backdrop-blur-sm border border-blue-200/30 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full flex-none" style="width: 350px;">
+                            <!-- Decorative elements -->
+                            <div class="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-yellow-400/20 to-blue-500/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-700"></div>
+                            <div class="absolute -top-2 -left-2 w-16 h-16 bg-gradient-to-br from-blue-500/20 to-yellow-400/20 rounded-full blur-lg group-hover:rotate-45 transition-all duration-500"></div>
+                            
+                            <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 flex items-center justify-center h-52">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services/Cetak PIN Ganci & Tag.jpg" alt="Cetak PIN Ganci & Tag" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700 filter group-hover:brightness-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 via-transparent to-transparent group-hover:from-blue-900/30 transition-all duration-500"></div>
+                                <div class="absolute top-3 left-3 bg-yellow-500 text-blue-900 px-3 py-1 rounded-full text-xs font-black shadow-lg">
+                                    🎨 CREATIVE
                                 </div>
                             </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Stempel Wisuda</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Stempel untuk wisuda dengan nama lengkap sesuai kebutuhan.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-blue-700">Rp 35.000</span>
-                                    <button onclick="goToContactForm('stempel-wisuda')" class="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition duration-300">
-                                        Pesan
+                            
+                            <div class="p-6 flex flex-col flex-grow relative z-10">
+                                <h3 class="text-xl font-bold mb-3 text-gray-800 group-hover:text-blue-700 transition-colors duration-300">PIN Ganci & Tag</h3>
+                                <p class="text-gray-600 mb-6 flex-grow leading-relaxed text-sm">Souvenir keren & identitas unik. PIN, Ganci, Name Tag custom, pesan sekarang!</p>
+                                
+                                <div class="flex flex-col gap-4">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Mulai dari</span>
+                                            <span class="text-2xl font-black text-blue-700">Rp 8.000</span>
+                                        </div>
+                                        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full p-3 group-hover:scale-110 transition-all duration-300 shadow-lg">
+                                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button onclick="goToContactForm('pin-ganci-tag')" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2">
+                                        <span>Pesan Sekarang</span>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    
+                    <!-- Service Card 7 - Cetak Undangan -->
+                    <div class="group relative bg-gradient-to-br from-white to-yellow-50 backdrop-blur-sm border border-yellow-200/30 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-yellow-500/10 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full flex-none" style="width: 350px;">
+                            <!-- Decorative elements -->
+                            <div class="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-blue-400/20 to-yellow-500/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-700"></div>
+                            <div class="absolute -top-2 -left-2 w-16 h-16 bg-gradient-to-br from-yellow-500/20 to-blue-400/20 rounded-full blur-lg group-hover:rotate-45 transition-all duration-500"></div>
+                            
+                            <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 flex items-center justify-center h-52">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services/Cetak Undangan.jpg" alt="Cetak Undangan" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700 filter group-hover:brightness-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 via-transparent to-transparent group-hover:from-blue-900/30 transition-all duration-500"></div>
+                                <div class="absolute top-3 left-3 bg-yellow-500 text-blue-900 px-3 py-1 rounded-full text-xs font-black shadow-lg">
+                                    � POPULER
+                                </div>
+                            </div>
+                            
+                            <div class="p-6 flex flex-col flex-grow relative z-10">
+                                <h3 class="text-xl font-bold mb-3 text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Cetak Undangan</h3>
+                                <p class="text-gray-600 mb-6 flex-grow leading-relaxed text-sm">Momen spesial, hasil maksimal! Cetak Undangan elegan dan custom. Buat kesan tak terlupakan!</p>
+                                
+                                <div class="flex flex-col gap-4">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Mulai dari</span>
+                                            <span class="text-2xl font-black text-blue-700">Rp 2.500</span>
+                                        </div>
+                                        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full p-3 group-hover:scale-110 transition-all duration-300 shadow-lg">
+                                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button onclick="goToContactForm('cetak-undangan')" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2">
+                                        <span>Pesan Sekarang</span>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Service Item 8 - Kupon -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300">
-                            <div class="relative overflow-hidden bg-yellow-400 from-yellow-50 to-yellow-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:-rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-yellow-100 group-hover:border-yellow-300">
-                                    <i class="fas fa-ticket-alt text-5xl text-yellow-500 group-hover:text-yellow-600 transition-colors duration-300"></i>
+                    <!-- Service Card 8 - Nota & Kupon Undian -->
+                    <div class="group relative bg-gradient-to-br from-white to-blue-50 backdrop-blur-sm border border-blue-200/30 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full flex-none" style="width: 350px;">
+                            <!-- Decorative elements -->
+                            <div class="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-yellow-400/20 to-blue-500/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-700"></div>
+                            <div class="absolute -top-2 -left-2 w-16 h-16 bg-gradient-to-br from-blue-500/20 to-yellow-400/20 rounded-full blur-lg group-hover:rotate-45 transition-all duration-500"></div>
+                            
+                            <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 flex items-center justify-center h-52">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services/Nota & Kupon Undian.jpg" alt="Nota & Kupon Undian" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700 filter group-hover:brightness-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 via-transparent to-transparent group-hover:from-blue-900/30 transition-all duration-500"></div>
+                                <div class="absolute top-3 left-3 bg-yellow-500 text-blue-900 px-3 py-1 rounded-full text-xs font-black shadow-lg">
+                                    💼 BISNIS
                                 </div>
                             </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Kupon</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Kupon bisa warna bisa putih sesuai kebutuhan bisnis Anda.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-yellow-500">Rp 150.000</span>
-                                    <button onclick="goToContactForm('kupon')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
-                                        Pesan
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Service Item 9 - Cetak A3 -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-blue-700 from-blue-50 to-blue-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-blue-100 group-hover:border-blue-300">
-                                    <i class="fas fa-print text-5xl text-blue-700 group-hover:text-blue-700 transition-colors duration-300"></i>
-                                </div>
-                            </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Cetak A3</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Cetak A3, stiker, AP230 A3 dan berbagai keperluan cetak lainnya.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-blue-700">Rp 5.000</span>
-                                    <button onclick="goToContactForm('cetak-a3')" class="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition duration-300">
-                                        Pesan
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 4 -->
-                    <div class="flex-none w-full grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <!-- Service Item 10 - Brosur -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300">
-                            <div class="relative overflow-hidden bg-yellow-400 from-yellow-50 to-yellow-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:-rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-yellow-100 group-hover:border-yellow-300">
-                                    <i class="fas fa-clipboard text-5xl text-yellow-500 group-hover:text-yellow-600 transition-colors duration-300"></i>
-                                </div>
-                            </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Brosur</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Per A3 harganya 3.500 klok A4 harganya lebih murah lagi.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-yellow-500">Rp 3.500</span>
-                                    <button onclick="goToContactForm('brosur')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
-                                        Pesan
-                                    </a>
+                            
+                            <div class="p-6 flex flex-col flex-grow relative z-10">
+                                <h3 class="text-xl font-bold mb-3 text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Nota & Kupon Undian</h3>
+                                <p class="text-gray-600 mb-6 flex-grow leading-relaxed text-sm">Atur bisnis dan sukseskan acara. Cetak Nota dan Kupon Undian custom cepat!</p>
+                                
+                                <div class="flex flex-col gap-4">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Mulai dari</span>
+                                            <span class="text-2xl font-black text-blue-700">Rp 50.000</span>
+                                        </div>
+                                        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full p-3 group-hover:scale-110 transition-all duration-300 shadow-lg">
+                                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button onclick="goToContactForm('nota-kupon-undian')" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2">
+                                        <span>Pesan Sekarang</span>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Service Item 11 - DTF Baju -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-blue-700 from-blue-50 to-blue-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-blue-100 group-hover:border-blue-300">
-                                    <i class="fas fa-tshirt text-5xl text-blue-700 group-hover:text-blue-700 transition-colors duration-300"></i>
+                    <!-- Service Card 9 - Sablon Mug -->
+                    <div class="group relative bg-gradient-to-br from-white to-yellow-50 backdrop-blur-sm border border-yellow-200/30 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-yellow-500/10 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full flex-none" style="width: 350px;">
+                            <!-- Decorative elements -->
+                            <div class="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-blue-400/20 to-yellow-500/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-700"></div>
+                            <div class="absolute -top-2 -left-2 w-16 h-16 bg-gradient-to-br from-yellow-500/20 to-blue-400/20 rounded-full blur-lg group-hover:rotate-45 transition-all duration-500"></div>
+                            
+                            <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 flex items-center justify-center h-52">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services/Sablon Mug.jpg" alt="Sablon Mug" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700 filter group-hover:brightness-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 via-transparent to-transparent group-hover:from-blue-900/30 transition-all duration-500"></div>
+                                <div class="absolute top-3 left-3 bg-yellow-500 text-blue-900 px-3 py-1 rounded-full text-xs font-black shadow-lg">
+                                    ☕ MERCHANDISE
                                 </div>
                             </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">DTF Baju</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Cetak DTF per meter 50.000 untuk sablon baju custom.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-blue-700">Rp 50.000</span>
-                                    <button onclick="goToContactForm('dtf-baju')" class="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition duration-300">
-                                        Pesan
-                                    </a>
+                            
+                            <div class="p-6 flex flex-col flex-grow relative z-10">
+                                <h3 class="text-xl font-bold mb-3 text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Sablon Mug</h3>
+                                <p class="text-gray-600 mb-6 flex-grow leading-relaxed text-sm">Hadiah personal dan bermanfaat. Mug custom untuk merchandise atau souvenir terbaik!</p>
+                                
+                                <div class="flex flex-col gap-4">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Mulai dari</span>
+                                            <span class="text-2xl font-black text-blue-700">Rp 25.000</span>
+                                        </div>
+                                        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full p-3 group-hover:scale-110 transition-all duration-300 shadow-lg">
+                                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button onclick="goToContactForm('sablon-mug')" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2">
+                                        <span>Pesan Sekarang</span>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    
+                    <!-- Service Card 10 - Yasin Custom -->
+                    <div class="group relative bg-gradient-to-br from-white to-yellow-50 backdrop-blur-sm border border-yellow-200/30 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-yellow-500/10 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full flex-none" style="width: 350px;">
+                            <!-- Decorative elements -->
+                            <div class="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-blue-400/20 to-yellow-500/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-700"></div>
+                            <div class="absolute -top-2 -left-2 w-16 h-16 bg-gradient-to-br from-yellow-500/20 to-blue-400/20 rounded-full blur-lg group-hover:rotate-45 transition-all duration-500"></div>
+                            
+                            <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 flex items-center justify-center h-52">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services/Buku Yasin + Cover.jpg" alt="Yasin Custom" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700 filter group-hover:brightness-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 via-transparent to-transparent group-hover:from-blue-900/30 transition-all duration-500"></div>
+                                <div class="absolute top-3 left-3 bg-yellow-500 text-blue-900 px-3 py-1 rounded-full text-xs font-black shadow-lg">
+                                    � RELIGI
+                                </div>
+                            </div>
+                            
+                            <div class="p-6 flex flex-col flex-grow relative z-10">
+                                <h3 class="text-xl font-bold mb-3 text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Buku Yasin + Cover</h3>
+                                <p class="text-gray-600 mb-6 flex-grow leading-relaxed text-sm">Yasin + Cover Custom dengan desain eksklusif, bahkan bisa pakai foto! Solusi praktis untuk acara peringatan.</p>
+                                
+                                <div class="flex flex-col gap-4">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Mulai dari</span>
+                                            <span class="text-2xl font-black text-blue-700">Rp 7.000</span>
+                                        </div>
+                                        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full p-3 group-hover:scale-110 transition-all duration-300 shadow-lg">
+                                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button onclick="goToContactForm('yasin-cover')" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2">
+                                        <span>Pesan Sekarang</span>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Service Item 12 - Kalender Custom -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-yellow-400 from-yellow-50 to-yellow-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:-rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-yellow-100 group-hover:border-yellow-300">
-                                    <i class="fas fa-calendar-week text-5xl text-yellow-500 group-hover:text-yellow-600 transition-colors duration-300"></i>
+                    <!-- Service Card 11 - Yasin Tahlil -->
+                    <div class="group relative bg-gradient-to-br from-white to-blue-50 backdrop-blur-sm border border-blue-200/30 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full flex-none" style="width: 350px;">
+                            <!-- Decorative elements -->
+                            <div class="absolute top-4 right-4 w-20 h-20 bg-gradient-to-br from-yellow-400/20 to-blue-500/20 rounded-full blur-xl group-hover:scale-150 transition-all duration-700"></div>
+                            <div class="absolute -top-2 -left-2 w-16 h-16 bg-gradient-to-br from-blue-500/20 to-yellow-400/20 rounded-full blur-lg group-hover:rotate-45 transition-all duration-500"></div>
+                            
+                            <div class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 flex items-center justify-center h-52">
+                                <img src="<?php echo get_template_directory_uri(); ?>/assets/images/services/Buku Yasin Kosongan.jpg" alt="Yasin Tahlil" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700 filter group-hover:brightness-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 via-transparent to-transparent group-hover:from-blue-900/30 transition-all duration-500"></div>
+                                <div class="absolute top-3 left-3 bg-yellow-500 text-blue-900 px-3 py-1 rounded-full text-xs font-black shadow-lg">
+                                    � RECOMMENDED
                                 </div>
                             </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Kalender Custom</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Kalender bisa request sesuai kebutuhan dan desain Anda.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-yellow-500">Rp 6.000</span>
-                                    <button onclick="goToContactForm('kalender-custom')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
-                                        Pesan
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 5 -->
-                    <div class="flex-none w-full grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <!-- Service Item 13 - Mug Costum -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-blue-700 from-blue-50 to-blue-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-blue-100 group-hover:border-blue-300">
-                                    <i class="fas fa-coffee text-5xl text-blue-700 group-hover:text-blue-700 transition-colors duration-300"></i>
-                                </div>
-                                <!-- <div class="absolute top-4 right-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                                    Hot
-                                </div> -->
-                            </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Mug Costum</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Mug costum bisa diksik foto, nama, dan desain sesuai keinginan.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-blue-700">Rp 25.000</span>
-                                    <button onclick="goToContactForm('mug-costum')" class="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition duration-300">
-                                        Pesan
-                                    </a>
+                            
+                            <div class="p-6 flex flex-col flex-grow relative z-10">
+                                <h3 class="text-xl font-bold mb-3 text-gray-800 group-hover:text-blue-700 transition-colors duration-300">Buku Yasin Kosongan</h3>
+                                <p class="text-gray-600 mb-6 flex-grow leading-relaxed text-sm">Yasin Kosongan siap diisi, dengan harga sangat terjangkau. Pilihan hemat dan cepat untuk kebutuhan religi Anda!</p>
+                                
+                                <div class="flex flex-col gap-4">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs text-gray-500 uppercase tracking-wide font-semibold">Mulai dari</span>
+                                            <span class="text-2xl font-black text-blue-700">Rp 2.700</span>
+                                        </div>
+                                        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full p-3 group-hover:scale-110 transition-all duration-300 shadow-lg">
+                                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button onclick="goToContactForm('yasin-kosongan')" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-2">
+                                        <span>Pesan Sekarang</span>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Service Item 14 - Nota dan Kupon -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-yellow-400 from-yellow-50 to-yellow-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:-rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-yellow-100 group-hover:border-yellow-300">
-                                    <i class="fas fa-tags text-5xl text-yellow-500 group-hover:text-yellow-600 transition-colors duration-300"></i>
-                                </div>
-                            </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Nota dan Kupon</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Nota dan kupon undian untuk berbagai keperluan bisnis Anda.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-yellow-500">Rp 150.000</span>
-                                    <button onclick="goToContactForm('nota-kupon-undian')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
-                                        Pesan
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Service Item 15 - Stempel Biasa -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-blue-700 from-blue-50 to-blue-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-blue-100 group-hover:border-blue-300">
-                                    <i class="fas fa-stamp text-5xl text-blue-700 group-hover:text-blue-700 transition-colors duration-300"></i>
-                                </div>
-                            </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Stempel Biasa dan Flash</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Stempel biasa yang dari kayu dan stempel flash otomatis.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-blue-700">Rp 35.000</span>
-                                    <button onclick="goToContactForm('stempel-biasa')" class="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition duration-300">
-                                        Pesan
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Slide 6 -->
-                    <div class="flex-none w-full grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <!-- Service Item 16 - Yasin + Cover -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-yellow-400 from-yellow-50 to-yellow-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:-rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-yellow-100 group-hover:border-yellow-300">
-                                    <i class="fas fa-book text-5xl text-yellow-500 group-hover:text-yellow-600 transition-colors duration-300"></i>
-                                </div>
-                            </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Yasin + Cover</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Yasin + cover bisa request sesuai kebutuhan acara.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-yellow-500">Rp 7.000</span>
-                                    <button onclick="goToContactForm('yasin-cover')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
-                                        Pesan
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Service Item 17 - Yasin Kosongan -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-blue-700 from-blue-50 to-blue-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-blue-100 group-hover:border-blue-300">
-                                    <i class="fas fa-scroll text-5xl text-blue-700 group-hover:text-blue-700 transition-colors duration-300"></i>
-                                </div>
-                            </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Yasin Kosongan</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Yasin kosongan bisa juga diisi dengan doa-doa lainnya.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-xl font-bold text-blue-700">
-                                        
-                                        <span class="text-2xl text-blue-700 ml-2">Rp 2.700</span>
-                                    </span>
-                                    <button onclick="goToContactForm('yasin-kosongan')" class="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition duration-300">
-                                        Pesan
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Service Item 18 - Undangan Pernikahan -->
-                        <div class="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition duration-300 flex flex-col h-full">
-                            <div class="relative overflow-hidden bg-yellow-400 from-yellow-50 to-yellow-100 flex items-center justify-center h-48">
-                                <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center group-hover:scale-125 group-hover:-rotate-12 transition-all duration-500 shadow-xl group-hover:shadow-2xl border-4 border-yellow-100 group-hover:border-yellow-300">
-                                    <i class="fas fa-heart text-5xl text-yellow-500 group-hover:text-yellow-600 transition-colors duration-300"></i>
-                                </div>
-                                <!-- <div class="absolute top-4 right-4 bg-blue-700 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                                    Spesial
-                                </div> -->
-                            </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <h3 class="text-xl font-semibold mb-3">Undangan Pernikahan</h3>
-                                <p class="text-gray-600 mb-4 flex-grow">Untuk harga undangan mulai dari Rp 2.500 tergantung model.</p>
-                                <div class="flex justify-between items-center mt-auto">
-                                    <span class="text-2xl font-bold text-yellow-500">Rp 2.500</span>
-                                    <button onclick="goToContactForm('undangan-nikah')" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
-                                        Pesan
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
-
-            <!-- Carousel Indicators -->
-            <div class="flex justify-center mt-8 space-x-2">
-                <button class="carousel-indicator w-3 h-3 bg-blue-700 rounded-full transition duration-300" data-slide="0"></button>
-                <button class="carousel-indicator w-3 h-3 bg-gray-300 rounded-full transition duration-300 hover:bg-gray-400" data-slide="1"></button>
-                <button class="carousel-indicator w-3 h-3 bg-gray-300 rounded-full transition duration-300 hover:bg-gray-400" data-slide="2"></button>
-                <button class="carousel-indicator w-3 h-3 bg-gray-300 rounded-full transition duration-300 hover:bg-gray-400" data-slide="3"></button>
-                <button class="carousel-indicator w-3 h-3 bg-gray-300 rounded-full transition duration-300 hover:bg-gray-400" data-slide="4"></button>
-                <button class="carousel-indicator w-3 h-3 bg-gray-300 rounded-full transition duration-300 hover:bg-gray-400" data-slide="5"></button>
-            </div>
         </div>
-
+        
+        <!-- Custom CSS for horizontal scroll -->
+        <style>
+        #servicesScrollContainer {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer 10+ */
+            scroll-behavior: smooth;
+        }
+        
+        #servicesScrollContainer::-webkit-scrollbar {
+            display: none; /* WebKit */
+        }
+        
+        #servicesScrollTrack {
+            transition: transform 0.3s ease;
+            align-items: stretch; /* Ensure all cards have same height */
+        }
+        
+        /* Service Cards Alignment */
+        #servicesScrollTrack > div {
+            height: 580px !important; /* Fixed height for all cards */
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        
+        /* Content area flex layout */
+        #servicesScrollTrack .p-6 {
+            display: flex !important;
+            flex-direction: column !important;
+            flex-grow: 1 !important;
+        }
+        
+        /* Description area grows to fill space */
+        #servicesScrollTrack .p-6 p {
+            flex-grow: 1 !important;
+            margin-bottom: 1.5rem !important;
+        }
+        
+        /* Price and button section stays at bottom */
+        #servicesScrollTrack .p-6 > div:last-child {
+            margin-top: auto !important;
+        }
+        
+        /* Ensure price row alignment */
+        #servicesScrollTrack .flex.justify-between.items-center {
+            align-items: flex-end !important;
+            margin-bottom: 1rem !important;
+        }
+        
+        /* Consistent button height */
+        #servicesScrollTrack button {
+            min-height: 48px !important;
+        }
+        
+        /* Title consistent height */
+        #servicesScrollTrack h3 {
+            min-height: 60px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+        
+        /* Drag cursor styles */
+        #servicesScrollContainer.grabbing {
+            cursor: grabbing !important;
+        }
+        
+        #servicesScrollContainer:active {
+            cursor: grabbing !important;
+        }
+        </style>
+        
         <script>
-        // Inline Services Carousel Script
+        // Horizontal Scroll Services - Infinite Scroll System
         document.addEventListener('DOMContentLoaded', function() {
-            const track = document.getElementById('servicesCarouselTrack');
-            const prevButton = document.getElementById('servicesCarouselPrev');
-            const nextButton = document.getElementById('servicesCarouselNext');
-            const indicators = document.querySelectorAll('.carousel-indicator');
+            const scrollContainer = document.getElementById('servicesScrollContainer');
+            const scrollTrack = document.getElementById('servicesScrollTrack');
             
-            if (!track || !prevButton || !nextButton || indicators.length === 0) {
-                console.log('Carousel elements not found');
+            if (!scrollContainer || !scrollTrack) {
+                console.log('Scroll elements not found');
                 return;
             }
             
-            let currentSlide = 0;
-            const totalSlides = 6;
-            let autoPlayInterval;
+            // Get all service cards
+            const originalCards = Array.from(scrollTrack.children);
+            const totalCards = originalCards.length;
             
-            function updateCarousel() {
-                const translateX = -currentSlide * 100;
-                track.style.transform = `translateX(${translateX}%)`;
+            console.log('🎯 Original service cards found:', totalCards);
+            
+            // Create infinite scroll by duplicating cards
+            function createInfiniteScroll() {
+                // Clear existing content
+                scrollTrack.innerHTML = '';
                 
-                indicators.forEach((indicator, index) => {
-                    if (index === currentSlide) {
-                        indicator.classList.remove('bg-gray-300');
-                        indicator.classList.add('bg-blue-700');
-                    } else {
-                        indicator.classList.remove('bg-blue-700');
-                        indicator.classList.add('bg-gray-300');
-                    }
-                });
-            }
-            
-            function nextSlide() {
-                currentSlide = (currentSlide + 1) % totalSlides;
-                updateCarousel();
-            }
-            
-            function prevSlide() {
-                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-                updateCarousel();
-            }
-            
-            function goToSlide(slideIndex) {
-                currentSlide = slideIndex;
-                updateCarousel();
-            }
-            
-            function startAutoPlay() {
-                if (autoPlayInterval) clearInterval(autoPlayInterval);
-                autoPlayInterval = setInterval(nextSlide, 4000);
-            }
-            
-            function stopAutoPlay() {
-                if (autoPlayInterval) clearInterval(autoPlayInterval);
-            }
-            
-            // Navigation buttons
-            nextButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                nextSlide();
-                stopAutoPlay();
-                startAutoPlay();
-            });
-            
-            prevButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                prevSlide();
-                stopAutoPlay();
-                startAutoPlay();
-            });
-            
-            // Indicator clicks
-            indicators.forEach((indicator, index) => {
-                indicator.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    goToSlide(index);
-                    stopAutoPlay();
-                    startAutoPlay();
-                });
-            });
-            
-            // Hover pause/resume
-            const carouselContainer = document.querySelector('.relative');
-            if (carouselContainer) {
-                carouselContainer.addEventListener('mouseenter', stopAutoPlay);
-                carouselContainer.addEventListener('mouseleave', startAutoPlay);
-            }
-            
-            // Touch support
-            let startX = 0;
-            let isDragging = false;
-            
-            track.addEventListener('touchstart', function(e) {
-                startX = e.touches[0].clientX;
-                isDragging = true;
-                stopAutoPlay();
-            });
-            
-            track.addEventListener('touchmove', function(e) {
-                if (!isDragging) return;
-                e.preventDefault();
-            });
-            
-            track.addEventListener('touchend', function(e) {
-                if (!isDragging) return;
-                isDragging = false;
+                // Clone cards multiple times for infinite effect
+                const cloneCount = 3; // Show 3 sets for smooth infinite scrolling
                 
-                const endX = e.changedTouches[0].clientX;
-                const diff = startX - endX;
-                
-                if (Math.abs(diff) > 50) {
-                    if (diff > 0) {
-                        nextSlide();
-                    } else {
-                        prevSlide();
-                    }
+                for (let i = 0; i < cloneCount; i++) {
+                    originalCards.forEach(card => {
+                        const clonedCard = card.cloneNode(true);
+                        scrollTrack.appendChild(clonedCard);
+                    });
                 }
-                startAutoPlay();
+                
+                console.log('� Infinite scroll created with', scrollTrack.children.length, 'total cards');
+            }
+            
+            // Initialize infinite scroll
+            createInfiniteScroll();
+            
+            // Smooth auto-scroll functionality
+            let isScrolling = false;
+            let scrollSpeed = 1; // pixels per frame
+            let currentPosition = 0;
+            
+            // Auto-scroll animation
+            function autoScroll() {
+                if (!isScrolling) {
+                    currentPosition += scrollSpeed;
+                    
+                    // Get card width + gap (350px + 32px gap)
+                    const cardWidth = 350 + 32;
+                    const totalWidth = cardWidth * totalCards;
+                    
+                    // Reset position when we've scrolled through one complete set
+                    if (currentPosition >= totalWidth) {
+                        currentPosition = 0;
+                    }
+                    
+                    scrollContainer.scrollLeft = currentPosition;
+                }
+                
+                requestAnimationFrame(autoScroll);
+            }
+            
+            // Start auto-scroll
+            autoScroll();
+            
+            // Mouse interaction for pausing scroll
+            scrollContainer.addEventListener('mouseenter', function() {
+                isScrolling = true;
+                console.log('⏸️ Auto-scroll paused - mouse enter');
             });
             
-            // Initialize
-            updateCarousel();
-            startAutoPlay();
+            scrollContainer.addEventListener('mouseleave', function() {
+                isScrolling = false;
+                console.log('▶️ Auto-scroll resumed - mouse leave');
+            });
+            
+            // Touch/drag support for mobile and desktop
+            let isDragging = false;
+            let startX = 0;
+            let scrollLeft = 0;
+            
+            // Mouse drag support
+            scrollContainer.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                isScrolling = true; // Pause auto-scroll
+                startX = e.pageX - scrollContainer.offsetLeft;
+                scrollLeft = scrollContainer.scrollLeft;
+                scrollContainer.style.cursor = 'grabbing';
+            });
+            
+            scrollContainer.addEventListener('mousemove', function(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                const x = e.pageX - scrollContainer.offsetLeft;
+                const walk = (x - startX) * 2; // Scroll speed multiplier
+                scrollContainer.scrollLeft = scrollLeft - walk;
+            });
+            
+            scrollContainer.addEventListener('mouseup', function() {
+                isDragging = false;
+                isScrolling = false; // Resume auto-scroll
+                scrollContainer.style.cursor = 'grab';
+            });
+            
+            scrollContainer.addEventListener('mouseleave', function() {
+                isDragging = false;
+                isScrolling = false; // Resume auto-scroll  
+                scrollContainer.style.cursor = 'grab';
+            });
+            
+            // Touch support for mobile
+            scrollContainer.addEventListener('touchstart', function(e) {
+                isDragging = true;
+                isScrolling = true; // Pause auto-scroll
+                startX = e.touches[0].pageX;
+                scrollLeft = scrollContainer.scrollLeft;
+            });
+            
+            scrollContainer.addEventListener('touchmove', function(e) {
+                if (!isDragging) return;
+                const x = e.touches[0].pageX;
+                const walk = (x - startX) * 2;
+                scrollContainer.scrollLeft = scrollLeft - walk;
+            });
+            
+            scrollContainer.addEventListener('touchend', function() {
+                isDragging = false;
+                isScrolling = false; // Resume auto-scroll
+            });
+            
+            // Set grab cursor
+            scrollContainer.style.cursor = 'grab';
+            
+            // Individual card hover to pause scroll and setup button events
+            function setupCardHoverEvents() {
+                setTimeout(() => {
+                    const serviceCards = document.querySelectorAll('.group.relative.bg-gradient-to-br');
+                    console.log('🎯 Setting up hover events for', serviceCards.length, 'cards');
+                    
+                    serviceCards.forEach((card, index) => {
+                        card.addEventListener('mouseenter', function() {
+                            isScrolling = true; // Pause scroll
+                            console.log('⏸️ Scroll paused - hover on card', index + 1);
+                        });
+                        
+                        card.addEventListener('mouseleave', function() {
+                            if (!isDragging) {
+                                isScrolling = false; // Resume scroll only if not dragging
+                                console.log('▶️ Scroll resumed - left card', index + 1);
+                            }
+                        });
+                        
+                        // Setup button click events for cloned cards
+                        const orderButton = card.querySelector('button[onclick*="goToContactForm"]');
+                        if (orderButton) {
+                            console.log('🔧 Setting up button event for card', index + 1);
+                            orderButton.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                
+                                // Extract service value from onclick attribute
+                                const onclickAttr = orderButton.getAttribute('onclick');
+                                console.log('🔍 Button onclick attribute:', onclickAttr);
+                                const serviceMatch = onclickAttr.match(/goToContactForm\('([^']+)'\)/);
+                                if (serviceMatch) {
+                                    const serviceValue = serviceMatch[1];
+                                    console.log('🎯 Extracted service value:', serviceValue);
+                                    window.goToContactForm(serviceValue);
+                                } else {
+                                    console.warn('⚠️ Could not extract service value from onclick');
+                                }
+                            });
+                        } else {
+                            console.warn('⚠️ No order button found in card', index + 1);
+                        }
+                    });
+                }, 100);
+            }
+            
+            // Setup hover events
+            setupCardHoverEvents();
+            
+            console.log('🎯 SUCCESS: Horizontal scroll system initialized');
+            console.log('🔄 Infinite scroll with', totalCards, 'unique cards');
+            console.log('🖱️ Drag to scroll manually');
+            console.log('⏸️ Hover cards to pause auto-scroll');
+            console.log('� Touch support enabled for mobile');
         });
+        
+        // Debug: Check DOM elements after initialization
+        setTimeout(() => {
+            const contactSection = document.getElementById('kontak');
+            const serviceSelect = document.getElementById('contact_service');
+            console.log('🔍 DOM DEBUG - Contact section:', contactSection ? 'Found' : 'Not found');
+            console.log('🔍 DOM DEBUG - Service select:', serviceSelect ? 'Found' : 'Not found');
+            if (serviceSelect) {
+                console.log('🔍 DOM DEBUG - Service select options:', serviceSelect.options.length);
+                console.log('🔍 DOM DEBUG - Available options:', Array.from(serviceSelect.options).map(opt => opt.value));
+            }
+            
+            // Test function call
+            console.log('🧪 Testing goToContactForm function...');
+            if (typeof window.goToContactForm === 'function') {
+                console.log('✅ goToContactForm function is available');
+            } else {
+                console.log('❌ goToContactForm function is NOT available');
+            }
+        }, 3000);
+        
+        // Add global click listener for service buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.matches('button[onclick*="goToContactForm"]')) {
+                console.log('🎯 Service button clicked via global listener');
+                e.preventDefault();
+                
+                const onclickAttr = e.target.getAttribute('onclick');
+                const serviceMatch = onclickAttr.match(/goToContactForm\('([^']+)'\)/);
+                if (serviceMatch) {
+                    const serviceValue = serviceMatch[1];
+                    console.log('🎯 Calling goToContactForm with:', serviceValue);
+                    window.goToContactForm(serviceValue);
+                }
+            }
+        });
+        
+        // Manual test function - you can call this from browser console
+        window.testServiceSelection = function(serviceValue) {
+            console.log('🧪 Manual test with service:', serviceValue);
+            window.goToContactForm(serviceValue);
+        };
+        
+        // Function to go to contact form with pre-selected service - Global scope
+        window.goToContactForm = function(serviceValue) {
+            console.log('🎯 goToContactForm called with:', serviceValue);
+            
+            // Scroll to contact section
+            const contactSection = document.getElementById('kontak');
+            if (contactSection) {
+                console.log('✅ Contact section found, scrolling...');
+                contactSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                
+                // Wait for scroll to complete, then set the service selection
+                setTimeout(() => {
+                    console.log('🔍 Looking for element with ID: contact_service');
+                    const serviceSelect = document.getElementById('contact_service');
+                    console.log('📋 Service select element:', serviceSelect);
+                    if (serviceSelect) {
+                        // Set the selected value
+                        serviceSelect.value = serviceValue;
+                        
+                        // Trigger change event to update display
+                        serviceSelect.dispatchEvent(new Event('change'));
+                        
+                        // Add visual feedback
+                        serviceSelect.style.border = '2px solid #3B82F6';
+                        serviceSelect.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+                        setTimeout(() => {
+                            serviceSelect.style.border = '';
+                            serviceSelect.style.boxShadow = '';
+                        }, 3000);
+                        
+                        // Focus on the name field to encourage form completion
+                        const nameField = document.querySelector('input[name="contact_name"]');
+                        if (nameField) {
+                            nameField.focus();
+                        }
+                        
+                        console.log('📋 Service selected:', serviceValue);
+                    } else {
+                        console.warn('⚠️ Service select element not found');
+                    }
+                }, 800); // Wait for scroll animation to complete
+            } else {
+                console.warn('⚠️ Contact section not found');
+            }
+        };
         
         // Fix card heights for proper alignment
         document.addEventListener('DOMContentLoaded', function() {
@@ -641,42 +914,7 @@
                 }
             });
         });
-        
-        // Function to go to contact form with pre-selected service
-        function goToContactForm(serviceValue) {
-            // Scroll to contact section
-            const contactSection = document.getElementById('kontak');
-            if (contactSection) {
-                contactSection.scrollIntoView({ 
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-                
-                // Wait for scroll to complete, then set the service selection
-                setTimeout(() => {
-                    const serviceSelect = document.getElementById('serviceSelect');
-                    if (serviceSelect) {
-                        // Set the selected value
-                        serviceSelect.value = serviceValue;
-                        
-                        // Trigger change event to update display
-                        serviceSelect.dispatchEvent(new Event('change'));
-                        
-                        // Add visual feedback
-                        serviceSelect.style.border = '2px solid #3B82F6';
-                        setTimeout(() => {
-                            serviceSelect.style.border = '';
-                        }, 2000);
-                        
-                        // Focus on the name field to encourage form completion
-                        const nameField = document.querySelector('input[type="text"]');
-                        if (nameField) {
-                            nameField.focus();
-                        }
-                    }
-                }, 800); // Wait for scroll animation to complete
-            }
-        }
+
         
         // Convert all WhatsApp links to form buttons
         document.addEventListener('DOMContentLoaded', function() {
@@ -860,101 +1098,64 @@
                     }
             ?>
                     <?php 
-                        // Get thumbnail URL with enhanced fallback system
-                        $thumbnail_url = '';
-                        $image_source = 'placeholder';
+                        // Use same image collection system as modal for consistency
                         $post_id = get_the_ID();
-                    ?>
-                    <div class="portfolio-item<?php echo esc_attr($category_classes); ?> group relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
-                         onclick="openPortfolioModal(<?php echo $post_id; ?>)"><?php
                         $post_title = get_the_title();
+                        $modal_images = array();
                         
-                        // Priority 1: WordPress Featured Image (multiple size attempts)
+                        // Priority 1: Featured image (multiple sizes) - same as modal
                         if (has_post_thumbnail($post_id)) {
-                            $sizes = array('large', 'medium_large', 'medium', 'portfolio-thumbnail', 'thumbnail', 'full');
+                            $sizes = array('large', 'medium_large', 'medium', 'full');
                             foreach ($sizes as $size) {
-                                $url = get_the_post_thumbnail_url($post_id, $size);
-                                if ($url && $url !== false && !empty($url)) {
-                                    // Verify the image exists and is accessible
-                                    $thumbnail_url = $url;
-                                    $image_source = "featured-{$size}";
-                                    break;
+                                $img_url = get_the_post_thumbnail_url($post_id, $size);
+                                if ($img_url && !in_array($img_url, $modal_images)) {
+                                    $modal_images[] = $img_url;
                                 }
                             }
                         }
                         
-                        // Priority 2: Try to get attachment directly if featured image fails
-                        if (!$thumbnail_url) {
-                            $thumbnail_id = get_post_thumbnail_id($post_id);
-                            if ($thumbnail_id) {
-                                $attachment_url = wp_get_attachment_url($thumbnail_id);
-                                if ($attachment_url) {
-                                    $thumbnail_url = $attachment_url;
-                                    $image_source = 'attachment-direct';
-                                }
-                            }
+                        // Priority 2: External image URL from meta - same as modal
+                        $external_image = get_post_meta($post_id, 'external_image_url', true);
+                        if ($external_image && filter_var($external_image, FILTER_VALIDATE_URL)) {
+                            $modal_images[] = $external_image;
                         }
                         
-                        // Priority 3: Check for first image in post content
-                        if (!$thumbnail_url) {
-                            $post_content = get_post_field('post_content', $post_id);
-                            preg_match('/<img[^>]+src=["\']([^"\']+)["\'][^>]*>/i', $post_content, $matches);
+                        // Priority 3: Images from content - same as modal (skip base64)
+                        $content = get_the_content();
+                        if ($content) {
+                            preg_match_all('/<img[^>]+src="([^"]+)"/', $content, $matches);
                             if (!empty($matches[1])) {
-                                $thumbnail_url = $matches[1];
-                                $image_source = 'content-image';
-                            }
-                        }
-                        
-                        // Priority 4: External Image URL from custom field
-                        if (!$thumbnail_url) {
-                            $external_image = get_post_meta($post_id, 'external_image_url', true);
-                            if ($external_image && filter_var($external_image, FILTER_VALIDATE_URL)) {
-                                $thumbnail_url = $external_image;
-                                $image_source = 'external';
-                            }
-                        }
-                        
-                        // Priority 5: Check gallery attachments
-                        if (!$thumbnail_url) {
-                            $attachments = get_posts(array(
-                                'post_type' => 'attachment',
-                                'post_mime_type' => 'image',
-                                'post_parent' => $post_id,
-                                'posts_per_page' => 1,
-                                'post_status' => 'inherit'
-                            ));
-                            if (!empty($attachments)) {
-                                $attachment_url = wp_get_attachment_url($attachments[0]->ID);
-                                if ($attachment_url) {
-                                    $thumbnail_url = $attachment_url;
-                                    $image_source = 'gallery-attachment';
+                                foreach ($matches[1] as $img_src) {
+                                    // Skip base64 data URLs as they're too heavy
+                                    if (strpos($img_src, 'data:image') !== 0 && filter_var($img_src, FILTER_VALIDATE_URL) && !in_array($img_src, $modal_images)) {
+                                        $modal_images[] = $img_src;
+                                    }
                                 }
                             }
                         }
                         
-                        // Priority 6: High-quality category-based placeholder with better design
-                        if (!$thumbnail_url) {
-                            $color_code = '3B82F6'; // default blue
-                            $text_color = 'FFFFFF';
-                            $bg_pattern = '';
-                            
-                            if ($primary_color == 'green') {
-                                $color_code = '10B981'; // emerald
-                            } elseif ($primary_color == 'yellow') {
-                                $color_code = 'F59E0B'; // amber
-                                $text_color = '1F2937'; // darker text for yellow bg
-                            } elseif ($primary_color == 'blue') {
-                                $color_code = '3B82F6'; // blue
-                            }
-                            
-                            $placeholder_text = wp_trim_words($post_title, 2, '');
-                            $encoded_title = urlencode($placeholder_text ?: 'Portfolio');
-                            $thumbnail_url = "https://via.placeholder.com/800x600/{$color_code}/{$text_color}?text={$encoded_title}";
+                        // Primary image (first available) - same as modal
+                        $thumbnail_url = !empty($modal_images) ? $modal_images[0] : '';
+                        $image_source = !empty($modal_images) ? 'collected-images' : 'placeholder';
+                        
+                        // Generate final fallback only if no real images found - same as modal
+                        if (empty($modal_images)) {
+                            $color_codes = array(
+                                'green' => '10B981',
+                                'yellow' => 'F59E0B',
+                                'blue' => '3B82F6',
+                                'purple' => '8B5CF6',
+                                'red' => 'EF4444',
+                                'indigo' => '6366F1',
+                                'pink' => 'EC4899'
+                            );
+                            $color_code = isset($color_codes[$primary_color]) ? $color_codes[$primary_color] : '3B82F6';
+                            $thumbnail_url = "https://via.placeholder.com/1200x800/{$color_code}/FFFFFF?text=" . urlencode(wp_trim_words($post_title, 2, ''));
                             $image_source = 'smart-placeholder';
                         }
-                        
-
-                        ?>
+                    ?>
+                    <div class="portfolio-item<?php echo esc_attr($category_classes); ?> group relative rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+                         onclick="openPortfolioModal(<?php echo $post_id; ?>)"><?php ?>
                         
                         <!-- Loading States -->
                         <div class="loading-overlay absolute inset-0 flex items-center justify-center bg-gray-100 z-20">
@@ -973,7 +1174,7 @@
                             data-post-id="<?php echo $post_id; ?>"
                             data-image-source="<?php echo esc_attr($image_source); ?>"
                             onload="
-                                console.log('✅ Image loaded successfully:', '<?php echo addslashes($post_title); ?>', 'Source: <?php echo $image_source; ?>');
+                                console.log('✅ PORTFOLIO Card Image loaded successfully:', 'Post ID: <?php echo $post_id; ?>', 'Title: <?php echo addslashes($post_title); ?>', 'URL: ' + this.src, 'Source: <?php echo $image_source; ?>');
                                 this.classList.remove('opacity-0'); 
                                 this.classList.add('opacity-100');
                                 const container = this.parentElement;
@@ -983,13 +1184,13 @@
                                 if (shimmerOverlay) shimmerOverlay.remove();
                             "
                             onerror="
-                                console.error('❌ Image load failed for:', '<?php echo addslashes($post_title); ?>', 'Original source:', this.src);
+                                console.error('❌ PORTFOLIO Card Image load failed:', 'Post ID: <?php echo $post_id; ?>', 'Title: <?php echo addslashes($post_title); ?>', 'Failed URL:', this.src, 'Source: <?php echo $image_source; ?>');
                                 const fallbackUrl = 'https://via.placeholder.com/800x600/<?php echo $primary_color === 'green' ? '10B981' : ($primary_color === 'yellow' ? 'F59E0B' : '3B82F6'); ?>/FFFFFF?text=<?php echo urlencode(wp_trim_words($post_title, 2, '')); ?>';
                                 if (this.src !== fallbackUrl) {
-                                    console.log('🔄 Trying fallback image...');
+                                    console.log('🔄 PORTFOLIO Card Trying fallback placeholder for:', '<?php echo addslashes($post_title); ?>');
                                     this.src = fallbackUrl;
                                 } else {
-                                    console.log('💡 Using final placeholder');
+                                    console.log('💡 PORTFOLIO Card Using final placeholder for:', '<?php echo addslashes($post_title); ?>');
                                     this.classList.remove('opacity-0'); 
                                     this.classList.add('opacity-100');
                                     const container = this.parentElement;
@@ -1063,12 +1264,23 @@
             <?php
             endif;
             
-            // Prepare portfolio data for JavaScript modal
+            // Prepare portfolio data for JavaScript modal - GET ALL PORTFOLIOS (not just 6)
             $portfolio_data = array();
-            if ($portfolio_query->have_posts()) {
-                $portfolio_query->rewind_posts();
-                while ($portfolio_query->have_posts()) {
-                    $portfolio_query->the_post();
+            
+            // Separate query for modal that gets ALL portfolio posts
+            $modal_args = array(
+                'post_type' => 'portfolio',
+                'posts_per_page' => -1, // -1 means get ALL posts
+                'orderby' => 'date',
+                'order' => 'ASC',
+                'post_status' => 'publish'
+            );
+            
+            $modal_portfolio_query = new WP_Query($modal_args);
+            
+            if ($modal_portfolio_query->have_posts()) {
+                while ($modal_portfolio_query->have_posts()) {
+                    $modal_portfolio_query->the_post();
                     $post_categories = get_the_terms(get_the_ID(), 'portfolio_category');
                     $category_name = '';
                     $primary_color = 'blue';
@@ -1164,11 +1376,17 @@
                 }
                 wp_reset_postdata();
             }
+            
+            // Reset the main portfolio query for any further use
+            if ($portfolio_query->have_posts()) {
+                $portfolio_query->rewind_posts();
+            }
             ?>
             
             <!-- Portfolio Data for JavaScript -->
             <script>
                 window.portfolioData = <?php echo json_encode($portfolio_data); ?>;
+                console.log('📊 Portfolio Data Loaded:', Object.keys(window.portfolioData).length, 'portfolios for modal');
                 
                 // Initialize modal fallback if needed
                 document.addEventListener('DOMContentLoaded', function() {
@@ -1276,6 +1494,7 @@
                     
                     // Load portfolio data
                     const portfolioData = getAllPortfolioData();
+                    
                     renderAllPortfolio(portfolioData);
                     
                     // Show modal
@@ -1303,6 +1522,8 @@
                         });
                     }
                     
+
+                    
                     renderAllPortfolio(filteredData);
                     
                     // Update active filter button
@@ -1324,7 +1545,15 @@
                     if (!gridContainer) return;
                     
                     if (portfolioData.length === 0) {
-                        gridContainer.innerHTML = '<div class="col-span-full text-center py-8 text-gray-500">Tidak ada portfolio ditemukan</div>';
+                        gridContainer.innerHTML = '<div class="col-span-full text-center py-12">' +
+                            '<div class="text-gray-400 mb-4">' +
+                            '<svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+                            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>' +
+                            '</svg>' +
+                            '</div>' +
+                            '<h3 class="text-lg font-semibold text-gray-700 mb-2">Tidak ada portfolio ditemukan</h3>' +
+                            '<p class="text-gray-500">Coba pilih kategori lain atau lihat semua portfolio</p>' +
+                            '</div>';
                         return;
                     }
                     
@@ -1539,7 +1768,7 @@
             <div>
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Tentang Barokah Printing</h2>
                 <p class="text-lg text-gray-600 mb-6">
-                    Didirikan sejak 2010, Barokah Printing telah menjadi partner terpercaya untuk berbagai kebutuhan percetakan. 
+                    Didirikan sejak 2015, Barokah Printing telah menjadi partner terpercaya untuk berbagai kebutuhan percetakan. 
                     Dengan komitmen pada kualitas dan kepuasan pelanggan, kami terus berinovasi menggunakan teknologi terdepan.
                 </p>
                 <p class="text-lg text-gray-600 mb-8">
@@ -1549,15 +1778,15 @@
                 
                 <div class="grid grid-cols-2 gap-6 mb-8">
                     <div class="text-center">
-                        <div class="text-3xl font-bold text-blue-700 mb-2">13+</div>
+                        <div class="text-3xl font-bold text-blue-700 mb-2"><?php echo date('Y') - 2015; ?>+</div>
                         <div class="text-gray-600">Tahun Pengalaman</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-3xl font-bold text-green-600 mb-2">5000+</div>
+                        <div class="text-3xl font-bold text-green-600 mb-2">2000+</div>
                         <div class="text-gray-600">Klien Puas</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-3xl font-bold text-yellow-500 mb-2">50+</div>
+                        <div class="text-3xl font-bold text-yellow-500 mb-2">11+</div>
                         <div class="text-gray-600">Jenis Layanan</div>
                     </div>
                     <div class="text-center">
@@ -1797,17 +2026,18 @@
                         <select id="contact_service" name="contact_service" 
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors bg-white">
                             <option value="">Pilih Layanan</option>
-                            <option value="Banner & Spanduk">Banner & Spanduk</option>
-                            <option value="Brosur">Brosur</option>
-                            <option value="Kartu Nama">Kartu Nama</option>
-                            <option value="Stiker & Label">Stiker & Label</option>
-                            <option value="Undangan Pernikahan">Undangan Pernikahan</option>
-                            <option value="Kalender Custom">Kalender Custom</option>
-                            <option value="Mug Custom">Mug Custom</option>
-                            <option value="DTF Baju">DTF Baju</option>
-                            <option value="Stempel">Stempel</option>
-                            <option value="Packaging & Box">Packaging & Box</option>
-                            <option value="Lainnya">Lainnya</option>
+                            <option value="yasin-cover">Buku Yasin + Cover</option>
+                            <option value="yasin-kosongan">Buku Yasin Kosongan</option>
+                            <option value="cetak-a3">Cetak A3+</option>
+                            <option value="cetak-brosur">Cetak Brosur</option>
+                            <option value="cetak-dtf">Cetak DTF</option>
+                            <option value="cetak-id-card">Cetak ID Card</option>
+                            <option value="cetak-kalender">Cetak Kalender</option>
+                            <option value="pin-ganci-tag">PIN Ganci & Tag</option>
+                            <option value="cetak-undangan">Cetak Undangan</option>
+                            <option value="nota-kupon-undian">Nota & Kupon Undian</option>
+                            <option value="sablon-mug">Sablon Mug</option>
+                            <option value="lainnya">Lainnya</option>
                         </select>
                     </div>
                     

@@ -114,14 +114,19 @@
                     
                     <div>
                         <label class="block text-sm font-medium mb-2">Layanan yang Diinginkan</label>
-                        <select name="service" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <select id="serviceSelect" name="service" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <option value="">Pilih Layanan</option>
-                            <option value="banner">Banner & Spanduk</option>
-                            <option value="brosur">Brosur & Flyer</option>
-                            <option value="kartu-nama">Kartu Nama</option>
-                            <option value="stiker">Stiker & Label</option>
-                            <option value="undangan">Undangan</option>
-                            <option value="packaging">Packaging & Box</option>
+                            <option value="cetak-a3">Cetak A3+</option>
+                            <option value="cetak-brosur">Cetak Brosur</option>
+                            <option value="cetak-dtf">Cetak DTF</option>
+                            <option value="cetak-id-card">Cetak ID Card</option>
+                            <option value="cetak-kalender">Cetak Kalender</option>
+                            <option value="pin-ganci-tag">PIN Ganci & Tag</option>
+                            <option value="cetak-undangan">Cetak Undangan</option>
+                            <option value="nota-kupon-undian">Nota & Kupon Undian</option>
+                            <option value="sablon-mug">Sablon Mug</option>
+                            <option value="yasin-cover">Buku Yasin + Cover</option>
+                            <option value="yasin-kosongan">Buku Yasin Kosongan</option>
                             <option value="lainnya">Lainnya</option>
                         </select>
                     </div>
